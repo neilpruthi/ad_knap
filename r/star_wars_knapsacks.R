@@ -10,19 +10,21 @@ data(starwars)
 # simulation settings
 n_rounds <- 1000
 
+# items, each with a name, n draws from the distribution, and price
+items <- data_frame(
+  draws = list(rnorm(n_rounds, 0, 10), rnorm(n_rounds, 4, 2), 
+               rnorm(n_rounds, 5, 1), rnorm(n_rounds, 7.2, 1.1),
+               rgamma(n_rounds, 2), rpois(n_rounds, 2)),
+  price = 1
+) %>% 
+  mutate(item = sample(unlist(starwars$starships), n(), replace = F))
+
+
 # players, each with a name, budget, strat, and params for that strat
 players <- data_frame(
   player = sample(starwars$name, 2, replace = F),
   budget = 5,
-  strat = "sample",
-  strat_params = list(c(size = 1))
-)
-
-# items, each with a name, n draws from the distribution, and price
-items <- data_frame(
-  item = sample(unlist(starwars$starships), 3, replace = F),
-  draws = list(rnorm(n_rounds, 5, 1), rgamma(n_rounds, 2), rpois(n_rounds, 2)),
-  price = 1
+  strat = "strat_random"
 )
 
 # Calculate feasible knapsacks, we can consider knapsacks of size 1:n, n, etc.
@@ -58,7 +60,7 @@ knapsacks <- knapsacks %>% select(-knap_draws)
 # number of other players.
 # i.e. to win in a three player game, a knapsack must take a value greater than that of both other
 # players.
-combn(knapsacks$knap_id, m = nrow(players), simplify = F) %>% 
+knapsack_utilities <- combn(knapsacks$knap_id, m = nrow(players), simplify = F) %>% 
   map_df(function(matchup) {
     knapsacks_reduced %>% 
       filter(knap_id %in% matchup) %>% 
@@ -75,8 +77,21 @@ combn(knapsacks$knap_id, m = nrow(players), simplify = F) %>%
   ungroup() %>% 
   select(-n) %>% 
   rename(knap_id = winner) %>% 
-  left_join(knapsacks, by = "knap_id")
+  left_join(knapsacks, by = "knap_id") %>% 
+  group_by(knap_id)
+
+# strategy functions to be called
+strat_random <- function(knaps) {
+  selection <- sample(knaps$knap_id, 1)
+  knaps %>% 
+    filter(knap_id == selection)
+}
 
 # For each player, choose a knapsack based on their strategy
-
+pmap_df(players, function(player, budget, strat) {
+  knaps <- knapsack_utilities %>% filter(total_price <= budget)
+  eval(parse(text = paste0(strat, "(knaps)"))) %>% 
+    mutate(player = player)
+}) %>% 
+  filter(matchup %in% levels(interaction(.$knap_id, .$knap_id, sep = "")))
 
