@@ -3,6 +3,7 @@
 #' Matching Pennies:
 #' minimax_2(matrix(c(1, -1, -1, 1), nrow = 2))$solution
 minimax_2 <- function(utilities) {
+  require(dplyr)
   require(ROI)
   require(ROI.plugin.glpk)
   require(ompr)
@@ -22,6 +23,7 @@ minimax_2 <- function(utilities) {
 }
 
 #' Given a matrix of utilities for three players returns the minimax solution for the first player.
+#' !!Probably not working!!
 minimax_3 <- function(utilities) {
   require(ROI)
   require(ROI.plugin.glpk)
