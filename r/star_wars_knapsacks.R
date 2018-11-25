@@ -1,20 +1,28 @@
+# Description --------------------------------------------------------------------------------------
+# Simulate adversarial knapsack game.
 # Ben Ewing on 2018-11-23
 
-# Libraries and data
+# Setup --------------------------------------------------------------------------------------------
+# Libraries
 library(dplyr)
 library(purrr)
 library(tidyr)
 library(e1071)
 data(starwars)
 
-# simulation settings
-n_rounds <- 1000
+# Simulation settings
+n_rounds <- 10000
 
-# items, each with a name, n draws from the distribution, and price
+# Item and player setup ----------------------------------------------------------------------------
 items <- data_frame(
-  draws = list(rnorm(n_rounds, 0, 10), rnorm(n_rounds, 4, 2), 
-               rnorm(n_rounds, 5, 1), rnorm(n_rounds, 7.2, 1.1),
-               rgamma(n_rounds, 2), rpois(n_rounds, 2)),
+  draws = list(
+    runif(n_rounds, 0, 2),
+    runif(n_rounds, 0, 1.75),
+    runif(n_rounds, 0, 1),
+    runif(n_rounds, 0.2, 1),
+    runif(n_rounds, 0.5, 1),
+    runif(n_rounds, -0.2, 2.7)
+  ),
   price = 1
 ) %>% 
   mutate(item = sample(unlist(starwars$starships), n(), replace = F))
@@ -22,7 +30,7 @@ items <- data_frame(
 
 # players, each with a name, budget, strat, and params for that strat
 players <- data_frame(
-  player = sample(starwars$name, 2, replace = F),
+  player = sample(starwars$name, 3, replace = F),
   budget = 5,
   strat = "strat_random"
 )
@@ -31,7 +39,7 @@ players <- data_frame(
 # What can the wealthiest player afford?
 # n_item_bound <- 1:min(max(players$budget)/(sum(items$price)/nrow(items)), length(unique(items$item)))
 # Arbitrary
-n_item_bound <- 2
+n_item_bound <- 1
 knapsacks <- map(n_item_bound, ~ combn(items$item, m = .x, simplify = F)) %>% 
   unlist(recursive = F) %>% 
   map_df( function(knap) {
@@ -64,12 +72,14 @@ knapsack_utilities <- combn(knapsacks$knap_id, m = nrow(players), simplify = F) 
   map_df(function(matchup) {
     knapsacks_reduced %>% 
       filter(knap_id %in% matchup) %>% 
-      summarise(winner = knap_id[max(knap_draws) == knap_draws],
+      group_by(round) %>% 
+      summarise(winner = knap_id[max(knap_draws) == knap_draws][1],
                 matchup = paste0(matchup, collapse = ""))
   }) %>% 
   group_by(matchup, winner) %>% 
   summarise(n = n()) %>%
   mutate(win_prop = n/sum(n),
+         # win all for winning, lose your entry fee for losing
          utility = ((n()-1)*win_prop - 1*(1-win_prop))) %>% 
   rowwise() %>% 
   # make matchup directional
@@ -79,6 +89,7 @@ knapsack_utilities <- combn(knapsacks$knap_id, m = nrow(players), simplify = F) 
   rename(knap_id = winner) %>% 
   left_join(knapsacks, by = "knap_id") %>% 
   group_by(knap_id)
+knapsack_utilities
 
 # strategy functions to be called
 strat_random <- function(knaps) {
@@ -95,3 +106,8 @@ pmap_df(players, function(player, budget, strat) {
 }) %>% 
   filter(matchup %in% levels(interaction(.$knap_id, .$knap_id, sep = "")))
 
+# A little analysis
+knapsack_utilities %>% 
+  group_by(knap_id) %>% 
+  summarise_if(is.numeric, mean) %>% 
+  arrange(utility)
