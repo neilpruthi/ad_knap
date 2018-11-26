@@ -133,17 +133,17 @@ strat_minimax_2 <- cmpfun(strat_minimax_2)
 # Three player minimax
 strat_minimax_3 <- function(knaps) {
   
-  row_strats <- sort(unique(knaps$knap_id))
-  col_strats <- sort(unique(knaps$knap_id))
+  utilities <- array(knaps$utility, dim = as.numeric(table(knaps$knap_id)/2))
+  strats <- 1:unique(as.numeric(table(knaps$knap_id)/2))
   
   MIPModel() %>%
     add_variable(row_utility, type = "continuous") %>%
-    add_variable(row_pr[i], i = row_strats, type = "continuous", lb = 0, ub = 1) %>%
+    add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
     set_objective(row_utility, "max") %>%
-    add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j)), collapse = "")], i = row_strats) >= row_utility,
-                   j = col_strats) %>%
-    add_constraint(sum_expr(row_pr[i], i = row_strats) == 1) %>%
+    add_constraint(sum_expr(row_pr[i]*utilities[i, j, k], i = strats) >= row_utility,
+                   j = strats, k = strats) %>%
+    add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
     solve_model(with_ROI(solver = "glpk"))
 }
 strat_minimax_3 <- cmpfun(strat_minimax_3)
-# strat_minimax_3(tmp)
+strat_minimax_3(tmp)
