@@ -1,0 +1,187 @@
+---
+title: "Simultaneous Adversarial Knapsack"
+author: "Ben Ewing"
+date: "November 25, 2018"
+output:
+  pdf_document: default
+header-includes:
+  - \usepackage{amsfonts}
+  - \usepackage{stmaryrd}
+  - \usepackage{bm}
+  - \usepackage{bbm}
+geometry: margin=2cm
+---
+
+# Setup
+
+Libraries.
+
+```{r libraries, message = F}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(tidyr)
+# For kurtosis and skew functions
+library(e1071)
+# RcppAlgos::comboGeneral is ~80x faster than utils::combn in my quick test, it also seems to beat
+# data.table::CJ. It can also run in parallel, but this doesn't seem to help on Windows. Might be
+# worth trying on the Econ linux machines?
+library(RcppAlgos)
+# For compiling functions to bytecode, this usually nets a tiny speedup
+library(compiler)
+# For linear programming
+library(dplyr)
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+```
+
+Load knapsack functions.
+
+```{r knapsack-funcs}
+source("../r/knapsack_functions.R")
+```
+
+Simulation settings and Star Wars data.
+
+```{r sim-settings}
+data("starwars")
+
+# number of draws from each items distribution, used to estimated utility of the item 
+n_draws <- 1000
+```
+
+# Premise
+
+There are $n$ players (indexed by $i$), each with budget $b_i$. There are $m$ items (indexed by $j$) with price $p_j$ and value $v_j$, which is a random variable with a known distribution. Unless otherwise stated, we assume that all $v_j$ are uncorrelated. Any additional beliefs players hold about an item's value are captured in an error term $\epsilon_{i,j}$. Unless otherwise stated, we assume the error for all players and items has mean 0.
+
+The player who forms the knapsack with the highest value wins. Players only care about winning: utility of 1 for winning, 0 otherwise. Players form knapsacks simultaneously, and values are only revealed after formation.
+
+# Case 1
+
+* $n = 2$ (two players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > 1$ (more than one item)
+    - all $v_j$ are equal in distribution (all items are the same)
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+
+```{r case-1}
+n_players <- 2
+knap_size <- 1
+tmp <- data_frame(
+  draws = list(
+    rep(c(0, 1), 10),
+    rep(c(0, 1), 10)#,
+    # runif(n_draws, 0, 1)
+  ),
+  price = 1
+) %>% 
+  mutate(item = sample(unlist(starwars$starships), n(), replace = F)) %>% 
+  form_knapsacks(knap_size) %>% 
+  left_join(., estimate_knapsack_utility(., n_players), by = "knap_id")
+
+tmp %>% 
+  group_by(knap_id) %>%
+  summarise_if(is.numeric, mean) %>%
+  arrange(utility)
+```
+
+Because all items are equally likely to take on the same value, players will just try not to choose the same item. In other words, players will play a mixed strategy where each item has an equal chance of being selected: $\frac{1}{m}$.
+
+# Case 2
+
+* $n = 2$ (two players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > 1$ (more than one item)
+    - All $v_j have the same expectation, different variance, and are symmetric.
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+    
+```{r case-2}
+n_players <- 2
+knap_size <- 1
+tmp <- data_frame(
+  draws = list(
+    rnorm(n_draws, 0, 1),
+    rnorm(n_draws, 0, 3),
+    rnorm(n_draws, 0, 5)
+  ),
+  price = 1
+) %>% 
+  mutate(item = sample(unlist(starwars$starships), n(), replace = F)) %>% 
+  form_knapsacks(knap_size) %>% 
+  left_join(., estimate_knapsack_utility(., n_players), by = "knap_id")
+
+tmp %>% 
+  group_by(knap_id) %>%
+  summarise_if(is.numeric, mean) %>%
+  arrange(utility)
+
+strat_minimax_2(tmp)$solution
+```
+
+With two players, variance does not matter so long as expectation is the same. Players will again play a mixed strategy in an attempt to avoid choosing the same items.
+
+# Case 3
+
+* $n = 2$ (two players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > 1$ (more than one item)
+    - All $v_j have the different expectation, different variance, and are symmetric.
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+    
+```{r case-3}
+n_players <- 2
+knap_size <- 1
+tmp <- data_frame(
+  draws = list(
+    rnorm(n_draws, 5, 3),
+    rnorm(n_draws, 5, 5),
+    rnorm(n_draws, 6, 1)
+  ),
+  price = 1
+) %>% 
+  mutate(item = sample(unlist(starwars$starships), n(), replace = F)) %>% 
+  form_knapsacks(knap_size) %>% 
+  left_join(., estimate_knapsack_utility(., n_players), by = "knap_id")
+
+tmp %>% 
+  group_by(knap_id) %>%
+  summarise_if(is.numeric, mean) %>%
+  arrange(utility)
+
+strat_minimax_2(tmp)$solution
+```
+
+Players will choose the item with the highest expectation, variance does not matter. 
+
+# Case 4
+
+* $n = 3$ (three players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > 1$ (more than one item)
+    - All $v_j have the same expectation, different variance, and are symmetric.
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+    
+```{r case-4}
+n_players <- 3
+knap_size <- 1
+tmp <- data_frame(
+  draws = list(
+    rnorm(n_draws, 5, 3),
+    rnorm(n_draws, 5, 5),
+    rnorm(n_draws, 5, 7)
+  ),
+  price = 1
+) %>% 
+  mutate(item = sample(unlist(starwars$starships), n(), replace = F)) %>% 
+  form_knapsacks(knap_size) %>% 
+  left_join(., estimate_knapsack_utility(., n_players), by = "knap_id")
+
+tmp %>% 
+  group_by(knap_id) %>%
+  summarise_if(is.numeric, mean) %>%
+  arrange(utility)
+
+strat_minimax_3(tmp)$solution
+```

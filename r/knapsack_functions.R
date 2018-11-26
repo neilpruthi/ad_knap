@@ -19,6 +19,12 @@ require(e1071)
 require(RcppAlgos)
 # For compiling functions to bytecode, this usually nets a tiny speedup
 require(compiler)
+# For linear programming
+require(dplyr)
+require(ROI)
+require(ROI.plugin.glpk)
+require(ompr)
+require(ompr.roi)
 data(starwars)
 
 # Functions ----------------------------------------------------------------------------------------
@@ -60,17 +66,38 @@ estimate_knapsack_utility <- function(knapsacks, n) {
     apply(1, function(matchup) {
       knapsacks %>%
         filter(knap_id %in% matchup) %>%
-        summarise(winner = knap_id[max(knap_draws) == knap_draws][1],
-                  matchup = paste0(matchup, collapse = ""))
+        do({
+          data_frame(knap_id = .$knap_id,
+                     winner = .$knap_id[which(.$knap_draws == max(.$knap_draws))],
+                     matchup = paste0(matchup, collapse = "")) %>% 
+            mutate(
+              # if there is a tie, no one wins!
+              n_wins = ifelse(length(unique(.$winner)) > 1, 0, 1),
+              # make sure only the true winner gets credit for winning...
+              n_wins = ifelse(winner == knap_id, n_wins, 0)
+            )
+        }) %>% 
+        select(-winner) %>% 
+        group_by(knap_id, matchup) %>% 
+        summarise(n_wins = sum(n_wins))
     }) %>% 
     bind_rows() %>%
-    group_by(matchup, winner) %>%
-    summarise(n = n()) %>%
-    mutate(win_prop = n/sum(n),
+    group_by(matchup) %>%
+    mutate(win_prop = (n_wins/sum(n_wins)),
            # win all for winning, lose your entry fee for losing
            utility = ((n()-1)*win_prop - 1*(1-win_prop))) %>% 
-    rename(knap_id = winner) %>% 
-    select(-n)
+    select(-n_wins) %>% 
+    # add utility 0 for when all players play the same strategy
+    bind_rows(
+      data_frame(
+        matchup = map_chr(unique(knapsacks$knap_id), ~ paste0(rep(.x, n), collapse = "")),
+        knap_id = unique(knapsacks$knap_id),
+        win_prop = 0,
+        utility = 0
+      )) %>% 
+    # smooth things out and take care of floating point accuracy
+    mutate_if(is.numeric, round, digits = 4) %>% 
+    replace_na(list(win_prop = 0, utility = 0))
 }
 estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
 
@@ -83,3 +110,39 @@ strat_random <- function(knaps) {
   knaps %>% 
     filter(knap_id == selection)
 }
+strat_random <- cmpfun(strat_random)
+
+# Two player minimax
+strat_minimax_2 <- function(knaps) {
+  
+  row_strats <- sort(unique(knaps$knap_id))
+  col_strats <- sort(unique(knaps$knap_id))
+  
+  MIPModel() %>%
+    add_variable(row_utility, type = "continuous") %>%
+    add_variable(row_pr[i], i = row_strats, type = "continuous", lb = 0, ub = 1) %>%
+    set_objective(row_utility, "max") %>%
+    add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j)), collapse = "")], i = row_strats) >= row_utility,
+                   j = col_strats) %>%
+    add_constraint(sum_expr(row_pr[i], i = row_strats) == 1) %>%
+    solve_model(with_ROI(solver = "glpk"))
+}
+strat_minimax_2 <- cmpfun(strat_minimax_2)
+
+# Three player minimax
+strat_minimax_3 <- function(knaps) {
+
+  row_strats <- sort(unique(knaps$knap_id))
+  col_strats <- sort(unique(knaps$knap_id))
+  
+  MIPModel() %>%
+    add_variable(row_utility, type = "continuous") %>%
+    add_variable(row_pr[i], i = row_strats, type = "continuous", lb = 0, ub = 1) %>%
+    set_objective(row_utility, "max") %>%
+    add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j)), collapse = "")], i = row_strats) >= row_utility,
+                   j = col_strats) %>%
+    add_constraint(sum_expr(row_pr[i], i = row_strats) == 1) %>%
+    solve_model(with_ROI(solver = "glpk"))
+}
+strat_minimax_3 <- cmpfun(strat_minimax_3)
+strat_minimax_3(tmp)
