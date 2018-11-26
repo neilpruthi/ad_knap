@@ -28,15 +28,15 @@ library(ompr.roi)
 source("r/knapsack_functions_mat.R")
 
 # Settings -----------------------------------------------------------------------------------------
-# sim_settings <- expand.grid(
-#   n_draws = 1000,
-#   n_players = 1:10,
-#   knap_size = 1:10,
-#   n_items = 10
-# ) %>% mutate(uid = 1:n())
+sim_settings <- expand.grid(
+  n_draws = 1000,
+  n_players = 1:10,
+  knap_size = 1:10,
+  n_items = 10
+) %>% mutate(uid = 1:n())
 
 # Simulations --------------------------------------------------------------------------------------
-future_pmap_dfr(sim_settings, function(n_draws, n_players, knap_size, n_items, uid) {
+tmp <- future_pmap(sim_settings, function(n_draws, n_players, knap_size, n_items, uid) {
   do.call(cbind, lapply(1:n_items, function(x) rnorm(n_draws, runif(1, 0, 10), runif(1, 0, 10)))) %>% 
     form_knapsacks(knap_size) %>% 
     estimate_knapsack_utility(n_players) %>% 
@@ -44,3 +44,4 @@ future_pmap_dfr(sim_settings, function(n_draws, n_players, knap_size, n_items, u
            n_items = n_items, uid = uid)
 })
 
+save(tmp, file = "sims/sims_2018_11_26.Rdata")
