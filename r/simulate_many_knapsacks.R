@@ -34,12 +34,6 @@ source("r/knapsack_functions_mat.R")
 #   knap_size = 1:10,
 #   n_items = 10
 # ) %>% mutate(uid = 1:n())
-sim_settings <- expand.grid(
-  n_draws = 1000,
-  n_players = 2:3,
-  knap_size = 1:2,
-  n_items = 4
-) %>% mutate(uid = 1:n())
 
 # Simulations --------------------------------------------------------------------------------------
 future_pmap_dfr(sim_settings, function(n_draws, n_players, knap_size, n_items, uid) {
