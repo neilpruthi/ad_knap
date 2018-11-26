@@ -29,6 +29,12 @@ data(starwars)
 
 # Functions ----------------------------------------------------------------------------------------
 
+# Helper to get number of unique characters in string
+nchar_unique <- function(s) {
+  length(unique(strsplit(s , "", fixed = TRUE)[[1]]))
+}
+nchar_unique <- cmpfun(nchar_unique)
+
 #' Takes a dataframe of items, and knapsack sizes (must be a scalar), and returns all 
 #' possible knapsacks, as well as some descriptive information about each knapsack.
 form_knapsacks <- function(items, size) {
@@ -62,7 +68,10 @@ estimate_knapsack_utility <- function(knapsacks, n) {
     ungroup() %>% 
     group_by(round)
   
-  comboGeneral(unique(knapsacks$knap_id), m = n) %>% 
+  permuteGeneral(sort(unique(knapsacks$knap_id)), n, repetition = T) %>% 
+    apply(1, sort) %>% 
+    t %>% 
+    unique() %>% 
     apply(1, function(matchup) {
       knapsacks %>%
         filter(knap_id %in% matchup) %>%
@@ -73,6 +82,8 @@ estimate_knapsack_utility <- function(knapsacks, n) {
             mutate(
               # if there is a tie, no one wins!
               n_wins = ifelse(length(unique(.$winner)) > 1, 0, 1),
+              # Both choose the same strategy, still a tie!
+              n_wins = ifelse(nchar_unique(.$matchup) == 1, 0, n_wins),
               # make sure only the true winner gets credit for winning...
               n_wins = ifelse(winner == knap_id, n_wins, 0)
             )
@@ -87,16 +98,6 @@ estimate_knapsack_utility <- function(knapsacks, n) {
            # win all for winning, lose your entry fee for losing
            utility = ((n()-1)*win_prop - 1*(1-win_prop))) %>% 
     select(-n_wins) %>% 
-    # add utility 0 for when all players play the same strategy
-    bind_rows(
-      data_frame(
-        matchup = map_chr(unique(knapsacks$knap_id), ~ paste0(rep(.x, n), collapse = "")),
-        knap_id = unique(knapsacks$knap_id),
-        win_prop = 0,
-        utility = 0
-      )) %>% 
-    # smooth things out and take care of floating point accuracy
-    mutate_if(is.numeric, round, digits = 4) %>% 
     replace_na(list(win_prop = 0, utility = 0))
 }
 estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
@@ -131,7 +132,7 @@ strat_minimax_2 <- cmpfun(strat_minimax_2)
 
 # Three player minimax
 strat_minimax_3 <- function(knaps) {
-
+  
   row_strats <- sort(unique(knaps$knap_id))
   col_strats <- sort(unique(knaps$knap_id))
   
@@ -145,4 +146,4 @@ strat_minimax_3 <- function(knaps) {
     solve_model(with_ROI(solver = "glpk"))
 }
 strat_minimax_3 <- cmpfun(strat_minimax_3)
-strat_minimax_3(tmp)
+# strat_minimax_3(tmp)
