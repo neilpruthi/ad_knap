@@ -77,10 +77,10 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
         nck_match <- ncol(knapsacks[ , matchup])
         map_dfr(1:nck_match, function(current_knap) {
           win_prop = (sum((knapsacks[ , matchup][ , current_knap] > knapsacks[ , matchup][ , -current_knap]) == T)/(nrk*(n_players-1)))
-          kmean = mean(knapsacks[ , unique(matchup)])
-          ksd = sd(knapsacks[ , unique(matchup)])
-          kskewness = skewness(knapsacks[ , unique(matchup)])
-          kkurtosis = kurtosis(knapsacks[ , unique(matchup)])
+          kmean = mean(knapsacks[ , matchup][ , current_knap])
+          ksd = sd(knapsacks[ , matchup][ , current_knap])
+          kskewness = skewness(knapsacks[ , matchup][ , current_knap])
+          kkurtosis = kurtosis(knapsacks[ , matchup][ , current_knap])
           
           # if multiple players play the same winning strategy, they need to split the payout,
           # but if they lose then they lose all

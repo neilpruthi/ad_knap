@@ -30,6 +30,7 @@ library(RcppAlgos)
 # For compiling functions to bytecode, this usually nets a tiny speedup
 library(compiler)
 # For linear programming
+library(dplyr)
 library(ROI)
 library(ROI.plugin.glpk)
 library(ompr)
