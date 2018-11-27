@@ -65,7 +65,11 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
         data_frame(
           knap_id = unique(matchup),
           matchup = paste0(matchup, collapse = ";"),
-          win_n = 0, win_prop = 0, utility = 0,
+          n_rounds = n_rounds,
+          n_ties = n_rounds, 
+          n_tie_strats = 1, 
+          n_wins = 0, 
+          utility = 0,
           mean = kmean, 
           sd = ksd, 
           skewness = kskewness,
@@ -76,10 +80,17 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
         # How often does this knapsack win against the others?
         n_knaps_match <- ncol(knapsacks[ , matchup])
         map_dfr(1:n_knaps_match, function(current_knap) {
-          # Which columns tie exactly? This can happen when another player plays the exact same
-          # knapsack, or a very similar one.
-          tie_cols <- apply(knapsacks[ , matchup][ , -current_knap], 2, function(x) all(x == knapsacks[ , matchup][ , current_knap]))
-          maxelse <- apply(knapsacks[ , matchup][ , -current_knap], 1, max)
+          # Borrowing Mory's code
+          # Sometimes subtracting columns leaves a vector, which apply will not work with
+          if(class(knapsacks[ , matchup][ , -current_knap]) == "matrix") {
+            maxelse <- apply(knapsacks[ , matchup][ , -current_knap], 1, max)
+            tie_cols <- apply(knapsacks[ , matchup][ , -current_knap], 2, function(x) all(x == knapsacks[ , matchup][ , current_knap]))
+          }
+          else {
+            maxelse <- knapsacks[ , matchup][ , -current_knap]
+            tie_cols <- rep(F, length(maxelse))
+          }
+          
           win_n <- sum(knapsacks[ , matchup][ , current_knap] > maxelse)
           tie_n <- sum(knapsacks[ , matchup][ , current_knap] == maxelse)
           win_prop <- win_n/(length(maxelse))#*(n_players-1))
@@ -102,9 +113,11 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           data_frame(
             knap_id = matchup[current_knap],
             matchup = paste0(matchup, collapse = ";"),
-            tie_cols = sum(tie_cols),
-            win_n = win_n, tie_n = tie_n,
-            win_prop = win_prop, 
+            n_rounds = n_rounds,
+            n_ties = tie_n,
+            n_tie_strats = sum(tie_cols),
+            n_wins = win_n,
+            # win_prop = win_prop, 
             utility = utility,
             mean = kmean, 
             sd = ksd, 
@@ -113,13 +126,7 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           )
         })
       }
-    })# %>% 
-  # if all strategies tie, set utility 0
-  # group_by(matchup) %>%
-  # mutate(utility_check = ifelse(abs(sum(utility)) == n(), T, F)) %>%
-  # rowwise() %>%
-  # mutate(utility = ifelse(utility_check, 0, utility)) %>%
-  # select(-utility_check) %>% ungroup()
+    })
 }
 estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
 
