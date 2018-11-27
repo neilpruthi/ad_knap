@@ -30,7 +30,7 @@ source("r/knapsack_functions_mat.R")
 # Settings -----------------------------------------------------------------------------------------
 sim_settings <- expand.grid(
   n_draws = 1000,
-  n_players = 1:10,
+  n_players = 2:10,
   knap_size = 1:10,
   n_items = 10
 ) %>% mutate(uid = 1:n())
