@@ -43,5 +43,5 @@ tmp <- future_pmap(sim_settings, function(n_draws, n_players, knap_size, n_items
     mutate(n_draws = n_draws, n_players = n_players, knap_size = knap_size, 
            n_items = n_items, uid = uid)
 })
-
+tmp$settings <- "n_draws = 1000; n_players = 1:10; knap_size = 1:10; n_items = 10"
 save(tmp, file = "sims/sims_2018_11_26.Rdata")
