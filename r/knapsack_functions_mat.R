@@ -47,8 +47,8 @@ form_knapsack_sample <- function(items, size, n) {
 form_knapsack_sample <- cmpfun(form_knapsack_sample)
 
 estimate_knapsack_utility <- function(knapsacks, n_players) {
-  nck <- ncol(knapsacks)
-  nrk <- nrow(knapsacks)
+  n_knaps <- ncol(knapsacks)
+  n_rounds <- nrow(knapsacks)
   # For each possible knapsack selection by each player
   permuteGeneral(1:ncol(knapsacks), n_players, repetition = T) %>% 
     apply(1, sort) %>% 
@@ -57,15 +57,15 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
     split(., seq(nrow(.))) %>% 
     map_dfr(function(matchup) {
       if (length(unique(matchup)) == 1) {
-        kmean = mean(knapsacks[ , unique(matchup)])
-        ksd = sd(knapsacks[ , unique(matchup)])
-        kskewness = skewness(knapsacks[ , unique(matchup)])
-        kkurtosis = kurtosis(knapsacks[ , unique(matchup)])
+        kmean <- mean(knapsacks[ , unique(matchup)])
+        ksd <- sd(knapsacks[ , unique(matchup)])
+        kskewness <- skewness(knapsacks[ , unique(matchup)])
+        kkurtosis <- kurtosis(knapsacks[ , unique(matchup)])
         
         data_frame(
           knap_id = unique(matchup),
           matchup = paste0(matchup, collapse = ";"),
-          win_prop = 0, utility = 0,
+          win_n = 0, win_prop = 0, utility = 0,
           mean = kmean, 
           sd = ksd, 
           skewness = kskewness,
@@ -74,13 +74,26 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
       } else {
         # for each knapsack in the matchup
         # How often does this knapsack win against the others?
-        nck_match <- ncol(knapsacks[ , matchup])
-        map_dfr(1:nck_match, function(current_knap) {
-          win_prop = (sum((knapsacks[ , matchup][ , current_knap] > knapsacks[ , matchup][ , -current_knap]) == T)/(nrk*(n_players-1)))
-          kmean = mean(knapsacks[ , matchup][ , current_knap])
-          ksd = sd(knapsacks[ , matchup][ , current_knap])
-          kskewness = skewness(knapsacks[ , matchup][ , current_knap])
-          kkurtosis = kurtosis(knapsacks[ , matchup][ , current_knap])
+        n_knaps_match <- ncol(knapsacks[ , matchup])
+        map_dfr(1:n_knaps_match, function(current_knap) {
+          # Which columns tie exactly? This can happen when another player plays the exact same
+          # knapsack, or a very similar one.
+          tie_cols <- apply(knapsacks[ , matchup][ , -current_knap], 2, function(x) all(x == knapsacks[ , matchup][ , current_knap]))
+          maxelse <- apply(knapsacks[ , matchup][ , -current_knap], 1, max)
+          win_n <- sum(knapsacks[ , matchup][ , current_knap] > maxelse)
+          tie_n <- sum(knapsacks[ , matchup][ , current_knap] == maxelse)
+          win_prop <- win_n/(length(maxelse)*(n_players-1))
+          # If tie_n == nrow, and win_prop > 1/n_players then just divide utility among tied winners
+          if (tie_n == length(maxelse)) {
+            utility <- sum(!tie_cols)/(sum(tie_cols)+1)
+          }
+          else
+            utility <- (((n_players-1)*win_prop) - 1*(1-win_prop))
+          
+          kmean <- mean(knapsacks[ , matchup][ , current_knap])
+          ksd <- sd(knapsacks[ , matchup][ , current_knap])
+          kskewness <- skewness(knapsacks[ , matchup][ , current_knap])
+          kkurtosis <- kurtosis(knapsacks[ , matchup][ , current_knap])
           
           # if multiple players play the same winning strategy, they need to split the payout,
           # but if they lose then they lose all
@@ -88,8 +101,10 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           data_frame(
             knap_id = matchup[current_knap],
             matchup = paste0(matchup, collapse = ";"),
-            win_prop = win_prop,
-            utility = (((n_players-1)*win_prop) - 1*(1-win_prop)),
+            tie_cols = sum(tie_cols),
+            win_n = win_n, tie_n = tie_n,
+            win_prop = win_prop, 
+            utility = utility,
             mean = kmean, 
             sd = ksd, 
             skewness = kskewness,
@@ -97,7 +112,13 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           )
         })
       }
-    })
+    })# %>% 
+  # if all strategies tie, set utility 0
+  # group_by(matchup) %>%
+  # mutate(utility_check = ifelse(abs(sum(utility)) == n(), T, F)) %>%
+  # rowwise() %>%
+  # mutate(utility = ifelse(utility_check, 0, utility)) %>%
+  # select(-utility_check) %>% ungroup()
 }
 estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
 
