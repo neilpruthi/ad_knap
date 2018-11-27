@@ -82,7 +82,8 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           maxelse <- apply(knapsacks[ , matchup][ , -current_knap], 1, max)
           win_n <- sum(knapsacks[ , matchup][ , current_knap] > maxelse)
           tie_n <- sum(knapsacks[ , matchup][ , current_knap] == maxelse)
-          win_prop <- win_n/(length(maxelse)*(n_players-1))
+          win_prop <- win_n/(length(maxelse))#*(n_players-1))
+          
           # If tie_n == nrow, and win_prop > 1/n_players then just divide utility among tied winners
           if (tie_n == length(maxelse)) {
             utility <- sum(!tie_cols)/(sum(tie_cols)+1)
