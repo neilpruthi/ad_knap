@@ -1,18 +1,18 @@
-### source('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/Project/single_comparison.R', echo = TRUE)
+### source('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/r/single_comparison.R', echo = TRUE)
 
-knapsack_compare <- function(dists, params, reps = 1, iters = 1000, ...) {
+### make half-normal distribution function and discrete uniform
+rhnorm <- function(n, sd = 1) {abs(rnorm(n, 0, (sqrt(pi) / sqrt(2))*sd))}
+rdunif <-function(n, min, max) {sample(min:max, n, replace = TRUE)}
+
+### make map of distributions to functions
+dist_names <- c('Uniform', 'Hypergeometric', 'Binomial', 'Poisson', 'Geometric', 
+	'Negative Binomial', 'Exponential', 'Log-normal', "Student's t", 'Normal', 
+	'Chi-squared', 'Weibull', 'Gamma', 'Beta', 'Half-normal', 'Discrete Uniform')
+dist_funs <- c(runif, rhyper, rbinom, rpois, rgeom, rnbinom, rexp, rlnorm, rt, rnorm, 
+	rchisq, rweibull, rgamma, rbeta, rhnorm, rdunif)
+
+knapsack_compare <- function(dists, params, reps = 1, iters = 1000, summary = TRUE, store = FALSE, ...) {
 	
-	### make half-normal distribution function and discrete uniform
-	rhnorm <- function(n, mean = 0, sd = 1) {abs(rnorm(n, mean, (sqrt(pi) / sqrt(2))*sd))}
-	rdunif <-function(n, min, max) {sample(min:max, n, replace = TRUE)}
-
-	### make map of distributions to functions
-	dist_names <- c('Uniform', 'Hypergeometric', 'Binomial', 'Poisson', 'Geometric', 
-		'Negative Binomial', 'Exponential', 'Log Normal', "Student's t", 'Normal', 
-		'Chi-Squared', 'Weibull', 'Gamma', 'Beta', 'Half-Normal', 'Discrete Uniform')
-	dist_funs <- c(runif, rhyper, rbinom, rpois, rgeom, rnbinom, rexp, rlnorm, rt, rnorm, 
-		rchisq, rweibull, rgamma, rbeta, rhnorm, rdunif)
-
 	### get number of distributions
 	n <- length(dists)
 
@@ -67,12 +67,18 @@ knapsack_compare <- function(dists, params, reps = 1, iters = 1000, ...) {
 	winpct <- round(100 * table(avgwin)/iters, 2)
 	avgmargin <- round(avgmargin, 5)
 
-	for(i in 1:n) {
-		out_winpct <- ifelse(length(winpct[which(names(winpct) == i)]) == 0, 0, winpct[which(names(winpct) == i)])
-		out_margin <- ifelse(is.na(avgmargin[i]), 0, avgmargin[i])
-		print(paste0(dists[i], '(', get(paste0('params', i)), ') wins in ', out_winpct, '% of ', iters, ' iterations by an average of ', out_margin, ' over ', reps, ' repetitions.'))
+	if(summary) {
+		for(i in 1:n) {
+			out_winpct <- ifelse(length(winpct[which(names(winpct) == i)]) == 0, 0, winpct[which(names(winpct) == i)])
+			out_margin <- ifelse(is.na(avgmargin[i]), 0, avgmargin[i])
+			print(paste0(dists[i], '(', get(paste0('params', i)), ') wins in ', out_winpct, '% of ', iters, ' iterations by an average of ', out_margin, ' over ', reps, ' repetitions.'))
+		}
+		print(paste0('The distributions tie in ', round(100 * (iters - length(avgwin))/iters, 2), '% of ', iters, ' iterations.'))
 	}
-	print(paste0('The distributions tie in ', round(100 * (iters - length(avgwin))/iters, 2), '% of ', iters, ' iterations.'))
+
+	if(store) {
+		return(winpct)
+	}
 }
 
 #knapsack_compare(dists = list('Uniform', 'Normal'), params = list(c(min = 0, max = 1), c(mean = 0.5, sd = 1)), reps = 100, iters = 10000)
