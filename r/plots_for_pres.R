@@ -147,7 +147,8 @@ tmp_mat %>%
   ggplot(aes(val, fill = minimax_strat, colour = minimax_strat)) +
   geom_density(alpha = 0.3) +
   facet_wrap(. ~ est_utility, ncol = 1) +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+        legend.position = "none")
 ggsave("figures/for_pres/three_player_five_item_het_mu_het_sd.png", width = 16, height = 10)
 
 
