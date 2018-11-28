@@ -140,20 +140,20 @@ estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
 # Given the knapsack (with estimated utilities), what knapsack would each function pick.
 
 # Choose a random strategy
-strat_random <- function(knaps) {
-  selection <- sample(knaps$knap_id, 1)
+strat_random <- function(knaps, n = 1) {
+  selection <- sample(knaps$knap_id, n)
   knaps %>% 
-    filter(knap_id == selection)
+    mutate(probability = ifelse(knap_id == selection, 1/n, 0))
 }
 strat_random <- cmpfun(strat_random)
 
 # Two player minimax
-strat_minimax_2 <- function(knaps) {
+strat_minimax_2 <- function(knaps, print_results = F) {
   
   row_strats <- sort(unique(knaps$knap_id))
   col_strats <- sort(unique(knaps$knap_id))
   
-  suppressWarnings(
+  tmp <- suppressWarnings(
     MIPModel() %>%
       add_variable(row_utility, type = "continuous") %>%
       add_variable(row_pr[i], i = row_strats, type = "continuous", lb = 0, ub = 1) %>%
@@ -163,15 +163,20 @@ strat_minimax_2 <- function(knaps) {
       add_constraint(sum_expr(row_pr[i], i = row_strats) == 1) %>%
       solve_model(with_ROI(solver = "glpk"))
   )
+  if (print_results)
+    print(tmp$solution)
+  data_frame(knap_id = strats, 
+             probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
+    left_join(knaps, by = "knap_id")
 }
 strat_minimax_2 <- cmpfun(strat_minimax_2)
 
 # Three player minimax
-strat_minimax_3 <- function(knaps) {
+strat_minimax_3 <- function(knaps, print_results = F) {
   
   strats <- sort(unique(knaps$knap_id))
   
-  suppressWarnings(
+  tmp <- suppressWarnings(
     MIPModel() %>%
       add_variable(row_utility, type = "continuous") %>%
       add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
@@ -181,5 +186,9 @@ strat_minimax_3 <- function(knaps) {
       add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
       solve_model(with_ROI(solver = "glpk"))
   )
-}
+  if (print_results)
+    print(tmp$solution)
+  data_frame(knap_id = strats, 
+             probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
+    left_join(knaps, by = "knap_id")}
 strat_minimax_3 <- cmpfun(strat_minimax_3)

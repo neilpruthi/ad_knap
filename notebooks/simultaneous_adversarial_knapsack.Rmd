@@ -198,5 +198,5 @@ tmp %>%
   summarise_if(is.numeric, mean) %>%
   arrange(utility)
 
-strat_minimax_3(tmp)$solution
+strat_minimax_3(tmp) %>% group_by(knap_id) %>% summarise(probability = mean(probability))
 ```
