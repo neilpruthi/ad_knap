@@ -47,8 +47,8 @@ form_knapsack_sample <- function(items, size, n) {
 form_knapsack_sample <- cmpfun(form_knapsack_sample)
 
 estimate_knapsack_utility <- function(knapsacks, n_players) {
-  nck <- ncol(knapsacks)
-  nrk <- nrow(knapsacks)
+  n_knaps <- ncol(knapsacks)
+  n_rounds <- nrow(knapsacks)
   # For each possible knapsack selection by each player
   permuteGeneral(1:ncol(knapsacks), n_players, repetition = T) %>% 
     apply(1, sort) %>% 
@@ -56,48 +56,83 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
     unique() %>% 
     split(., seq(nrow(.))) %>% 
     map_dfr(function(matchup) {
-      if (length(unique(matchup)) == 1) {
-        kmean = mean(knapsacks[ , unique(matchup)])
-        ksd = sd(knapsacks[ , unique(matchup)])
-        kskewness = skewness(knapsacks[ , unique(matchup)])
-        kkurtosis = kurtosis(knapsacks[ , unique(matchup)])
+      # for each knapsack in the matchup
+      # How often does this knapsack win against the others?
+      map_dfr(1:length(matchup), function(current_match) {
+        # Borrowing Mory's code
+        # Sometimes subtracting columns leaves a vector, which apply will not work with
+        
+        current_knap <- knapsacks[ , matchup[current_match]]
+        opp_knaps <- knapsacks[ , matchup[-current_match]]
+        
+        if (class(opp_knaps) == "matrix")
+          tie_cols <- colSums(current_knap == opp_knaps) == nrow(knapsacks)
+        else
+          tie_cols <- sum(opp_knaps == current_knap) == nrow(knapsacks)
+
+        # subset out any tying columns
+        if (any(tie_cols) & class(opp_knaps) == "matrix")
+          opp_knaps <- opp_knaps[ , !tie_cols]
+        else if (any(tie_cols))
+          opp_knaps <- opp_knaps[!tie_cols]
+        
+        # print("current_knap")
+        # print(current_knap)
+        # print("opp_knaps")
+        # print(opp_knaps)
+        
+        # if empty, then all were ties!
+        if (length(opp_knaps) == 0)
+          maxelse <- current_knap
+        # otherwise, get maxelse
+        else if(class(opp_knaps) == "matrix")
+          maxelse <- apply(opp_knaps, 1, max)
+        else
+          maxelse <- opp_knaps
+        
+        # print("maxelse")
+        # print(maxelse)
+        
+        win_n <- sum(current_knap > maxelse)
+        
+        win_prop <- win_n/n_rounds
+        
+        # print("win_n")
+        # print(win_n)
+        # print("win_prop")
+        # print(win_prop)
+        
+        kmean <- mean(current_knap)
+        ksd <- sd(current_knap)
+        kskewness <- skewness(current_knap)
+        kkurtosis <- kurtosis(current_knap)
         
         data_frame(
-          knap_id = unique(matchup),
+          knap_id = matchup[current_match],
           matchup = paste0(matchup, collapse = ";"),
-          win_prop = 0, utility = 0,
+          n_tie_strats = sum(tie_cols),
+          win_n = win_n,
+          win_prop = win_prop,
           mean = kmean, 
           sd = ksd, 
           skewness = kskewness,
           kurtosis = kkurtosis
         )
-      } else {
-        # for each knapsack in the matchup
-        # How often does this knapsack win against the others?
-        nck_match <- ncol(knapsacks[ , matchup])
-        map_dfr(1:nck_match, function(current_knap) {
-          win_prop = (sum((knapsacks[ , matchup][ , current_knap] > knapsacks[ , matchup][ , -current_knap]) == T)/(nrk*(n_players-1)))
-          kmean = mean(knapsacks[ , unique(matchup)])
-          ksd = sd(knapsacks[ , unique(matchup)])
-          kskewness = skewness(knapsacks[ , unique(matchup)])
-          kkurtosis = kurtosis(knapsacks[ , unique(matchup)])
-          
-          # if multiple players play the same winning strategy, they need to split the payout,
-          # but if they lose then they lose all
-          
-          data_frame(
-            knap_id = matchup[current_knap],
-            matchup = paste0(matchup, collapse = ";"),
-            win_prop = win_prop,
-            utility = (((n_players-1)*win_prop) - 1*(1-win_prop)),
-            mean = kmean, 
-            sd = ksd, 
-            skewness = kskewness,
-            kurtosis = kkurtosis
-          )
-        })
-      }
-    })
+      })
+    }) %>% 
+    # determine utility in each matchup
+    group_by(matchup) %>% 
+    mutate(
+      utility = case_when(
+        sum(win_prop) == 0 ~ 0,
+        # tie win
+        win_prop == max(win_prop) ~ win_prop * (n()/(sum(win_prop == max(win_prop))) - 1) - 1*(1-win_prop),
+        # tie lose
+        win_prop == min(win_prop) ~ win_prop * (n()/(sum(win_prop == min(win_prop))) - 1) - 1*(1-win_prop),
+        # otherwise
+        T ~ (n_players-1)*win_prop - 1*(1-win_prop)
+      )
+    )
 }
 estimate_knapsack_utility <- cmpfun(estimate_knapsack_utility)
 
