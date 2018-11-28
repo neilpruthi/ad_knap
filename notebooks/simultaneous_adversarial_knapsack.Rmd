@@ -128,13 +128,13 @@ tmp <- matrix(c(
 ), ncol = 3) %>% 
   form_knapsacks(knap_size) %>% 
   estimate_knapsack_utility(n_players)
-tmp
-# tmp %>% 
-#   group_by(knap_id) %>%
-#   summarise_if(is.numeric, mean) %>%
-#   arrange(utility)
-# 
-# strat_minimax_2(tmp)$solution
+
+tmp %>%
+  group_by(knap_id) %>%
+  summarise_if(is.numeric, mean) %>%
+  arrange(utility)
+
+strat_minimax_2(tmp)$solution
 ```
 
 Players will choose the item with the highest expectation, variance does not matter. 
@@ -160,7 +160,7 @@ tmp <- matrix(c(
 ), ncol = 5) %>% 
   form_knapsacks(knap_size) %>% 
   estimate_knapsack_utility(n_players)
-tmp
+
 tmp %>%
   group_by(knap_id) %>%
   summarise_if(is.numeric, mean) %>%
