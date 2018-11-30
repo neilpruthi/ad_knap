@@ -1,0 +1,243 @@
+---
+title: "Simultaneous Adversarial Knapsack"
+author: "Ben Ewing"
+date: "November 25, 2018"
+output:
+  pdf_document: default
+header-includes:
+  - \usepackage{amsfonts}
+  - \usepackage{stmaryrd}
+  - \usepackage{bm}
+  - \usepackage{bbm}
+geometry: margin=2cm
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+Libraries.
+
+```{r libraries, message = F}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(tidyr)
+# For kurtosis and skew functions
+library(e1071)
+# For fast combinations
+library(RcppAlgos)
+# For compiling functions to bytecode, this usually nets a tiny speedup
+library(compiler)
+# For linear programming
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+# For plots and tables
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+# For parallelization
+library(parallel)
+```
+
+Load knapsack functions.
+
+```{r knapsack-funcs}
+source("../r/knapsack_functions_mat.R")
+```
+
+Simulation settings.
+
+```{r sim-settings}
+n_knap_sims <- 500
+n_draws <- 1000
+n_items <- 20
+knap_size <- 1
+```
+
+The set of distributions an item can draw from.
+```{r dist-functions}
+dist_functions <- list(
+  wrnorm = function(n) rnorm(n, runif(1, 0, 5), runif(1, 0, 5)),
+  wrunif = function(n) {
+    min <- runif(1, -5, 5)
+    max <- min + runif(1, -5, 5)
+    max <- ifelse(max < min, abs(max)+min, max)
+    runif(n, min, max)
+  },
+  wrgamma = function(n) rgamma(n, runif(1, 0, 5))#,
+  # wrweibull = function(n) rweibull(n, runif(1, 0.1, 5))
+)
+```
+
+# Goal
+
+To understand why minimax chooses the strategies that it does.
+
+# Approach
+
+For each scenario, simulate many games. Within each game find the minimax strategy. Then look at descripives of minimax winners.
+
+# Two Players
+
+Set two players.
+
+```{r two-player-settings}
+n_players <- 2
+```
+
+Run simulations.
+
+```{r two-player-knaps}
+# In parallel?
+cl <- makeCluster(16)
+clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
+                    "strat_minimax_2"))
+clusterEvalQ(cl, {
+  # For data manipulation
+  library(dplyr)
+  library(purrr)
+  library(tidyr)
+  # For kurtosis and skew functions
+  library(e1071)
+  # For fast combinations
+  library(RcppAlgos)
+  # For compiling functions to bytecode, this usually nets a tiny speedup
+  library(compiler)
+  # For linear programming
+  library(ROI)
+  library(ROI.plugin.glpk)
+  library(ompr)
+  library(ompr.roi)
+})
+knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
+  mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+  minimax <- estimate_knapsack_utility(mat, n_players) %>%
+    strat_minimax_2() %>%
+    group_by(knap_id) %>%
+    summarise_if(is.numeric, mean) %>%
+    arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
+  mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
+  as_data_frame(mat) %>%
+    mutate(minimax_weighted = mat_minimax_weighted) %>%
+    gather(knap_id, value) %>%
+    mutate(knap_id = gsub("V", "", knap_id)) %>%
+    left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
+    mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
+})
+
+stopCluster(cl)
+
+knaps <- bind_rows(knaps) %>% 
+  group_by(knap_id) %>%
+  mutate(
+    mean = mean(value), sd = sd(value),
+    skewness = skewness(value), kurtosis = kurtosis(value)
+  )
+```
+
+Plot knapsack descriptives for knapsacks that received positive probability.
+
+```{r 2p-knapsack-stats}
+knaps %>% 
+  # this also drops minimax_weighted rows, they have NA probability
+  filter(probability > 0) %>% 
+  summarise(probability = unique(probability), mean = unique(mean), sd = unique(sd), 
+            skewness = unique(skewness), kurtosis = unique(kurtosis)) %>% 
+  gather(measure, val, -knap_id, -probability) %>% 
+  ggplot(aes(probability, val)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  facet_wrap(. ~ measure, scales = "free")
+```
+
+<!-- Plot distributions? Pretty messy. -->
+
+```{r knapsack-dists}
+# knaps %>% 
+#   select(sim_id, knap_id, value, probability) %>% 
+#   mutate(label = case_when(
+#     probability > 0 ~ "minimax_part",
+#     grepl("minimax", knap_id) ~ "minimax",
+#     T ~ "Other"
+#   )) %>% 
+#   ggplot(aes(value, group = knap_id, fill = knap_id, colour = knap_id)) +
+#   geom_density(alpha = 0.3, show.legend = F) +
+#   facet_grid(sim_id ~ label, scales = "free")
+```
+
+
+# Three Players
+
+Set two players.
+
+```{r three-player-settings}
+n_players <- 3
+```
+
+Run simulations.
+
+```{r three-player-knaps}
+# In parallel?
+cl <- makeCluster(16)
+clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
+                    "strat_minimax_3"))
+clusterEvalQ(cl, {
+  # For data manipulation
+  library(dplyr)
+  library(purrr)
+  library(tidyr)
+  # For kurtosis and skew functions
+  library(e1071)
+  # For fast combinations
+  library(RcppAlgos)
+  # For compiling functions to bytecode, this usually nets a tiny speedup
+  library(compiler)
+  # For linear programming
+  library(ROI)
+  library(ROI.plugin.glpk)
+  library(ompr)
+  library(ompr.roi)
+})
+knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
+  mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+  minimax <- estimate_knapsack_utility(mat, n_players) %>%
+    strat_minimax_3() %>%
+    group_by(knap_id) %>%
+    summarise_if(is.numeric, mean) %>%
+    arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
+  mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
+  as_data_frame(mat) %>%
+    mutate(minimax_weighted = mat_minimax_weighted) %>%
+    gather(knap_id, value) %>%
+    mutate(knap_id = gsub("V", "", knap_id)) %>%
+    left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
+    mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
+})
+
+stopCluster(cl)
+
+knaps <- bind_rows(knaps) %>% 
+  group_by(knap_id) %>%
+  mutate(
+    mean = mean(value), sd = sd(value),
+    skewness = skewness(value), kurtosis = kurtosis(value)
+  )
+```
+
+Plot knapsack descriptives for knapsacks that received positive probability.
+
+```{r 3p-knapsack-stats}
+knaps %>% 
+  # this also drops minimax_weighted rows, they have NA probability
+  filter(probability > 0) %>% 
+  summarise(probability = unique(probability), mean = unique(mean), sd = unique(sd), 
+            skewness = unique(skewness), kurtosis = unique(kurtosis)) %>% 
+  gather(measure, val, -knap_id, -probability) %>% 
+  ggplot(aes(probability, val)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  facet_wrap(. ~ measure, scales = "free")
+```
