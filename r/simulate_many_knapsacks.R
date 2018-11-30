@@ -39,11 +39,11 @@ sim_settings <- expand.grid(
   n_draws = 1000,
   n_players = 3,
   knap_size = 1,
-  n_items = 2:20
+  n_items = 10
 ) %>% mutate(uid = 1:n())
 
 tmp <- pmap(sim_settings, function(n_draws, n_players, knap_size, n_items, mean, sd, uid) {
-  do.call(cbind, lapply(1:n_items, function(x) rnorm(n_draws, runif(1, 0, 10), runif(1, 0, 10)))) %>% 
+  mat <- do.call(cbind, lapply(1:n_items, function(x) rnorm(n_draws, runif(1, 0, 10), runif(1, 0, 10)))) %>% 
     estimate_knapsack_utility(n_players) %>%
     mutate(n_draws = n_draws, n_players = n_players, knap_size = knap_size,
            n_items = n_items, uid = uid)

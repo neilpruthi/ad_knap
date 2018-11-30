@@ -26,7 +26,7 @@ theme_set(theme_tufte(base_size = 22))
 
 source("r/knapsack_functions_mat.R")
 
-n_draws <- 100000
+n_draws <- 10000
 
 # Two Item Two Player, Equal mean Equal Var --------------------------------------------------------
 n_players <- 2
@@ -171,3 +171,5 @@ tmp %>%
   geom_point() +
   geom_smooth(method = 'lm', se = F) +
   facet_wrap( ~ var, scales = "free", ncol = 2)
+
+# Skew

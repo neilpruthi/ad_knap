@@ -60,7 +60,7 @@ The player who forms the knapsack with the highest value wins. Players only care
 * $n = 2$ (two players)
     - $b_i = 1$ for all $i$ (all have a budget of one)
 * $m > 1$ (more than one item)
-    - all $v_j$ are equal in distribution (all items are the same)
+    - all $v_j$ are normal and equal in distribution (all items are the same)
     - $p_j = 1$ for all $j$ (all items have a price of one)
 
 ```{r case-1}
@@ -87,7 +87,7 @@ Because all items are equally likely to take on the same value, players will jus
 * $n = 2$ (two players)
     - $b_i = 1$ for all $i$ (all have a budget of one)
 * $m > 1$ (more than one item)
-    - All $v_j have the same expectation, different variance, and are symmetric.
+    - All $v_j$ are normal, have the same expectation, different variance, and are symmetric.
     - $p_j = 1$ for all $j$ (all items have a price of one)
     
 ```{r case-2, warning=F}
@@ -114,7 +114,7 @@ With two players, variance does not matter so long as expectation is approximate
 * $n = 2$ (two players)
     - $b_i = 1$ for all $i$ (all have a budget of one)
 * $m > 1$ (more than one item)
-    - All $v_j have different expectation, different variance, and are symmetric.
+    - All $v_j$ are normal, have different expectation, different variance, and are symmetric.
     - $p_j = 1$ for all $j$ (all items have a price of one)
     
 ```{r case-3}
@@ -144,7 +144,7 @@ Players will choose the item with the highest expectation, variance does not mat
 * $n = 3$ (three players)
     - $b_i = 1$ for all $i$ (all have a budget of one)
 * $m > n$ (more than one item)
-    - All $v_j have the same expectation, different variance, and are symmetric.
+    - All $v_j$, are normal, have the same expectation, different variance, and are symmetric.
     - $p_j = 1$ for all $j$ (all items have a price of one)
     
 ```{r case-4}
@@ -176,7 +176,7 @@ No idea. It looks like players randomize over every item, except that with the h
 * $n = 3$ (three players)
     - $b_i = 1$ for all $i$ (all have a budget of one)
 * $m > n$ (more than one item)
-    - All $v_j have different expectation, different variance, and are symmetric.
+    - All $v_j$ are normal, have different expectation, different variance, and are symmetric.
     - $p_j = 1$ for all $j$ (all items have a price of one)
     
 ```{r case-5}
@@ -200,3 +200,111 @@ tmp %>%
 
 strat_minimax_3(tmp) %>% group_by(knap_id) %>% summarise(probability = mean(probability))
 ```
+
+# Case 6
+
+* $n = 3$ (three players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > n$ (more than one item)
+    - All $v_j$ are non-normal, have different expectation, different variance, and are symmetric.
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+    
+```{r case-6}
+n_players <- 3
+n_items <- 1000
+n_items_sample <- 30
+knap_size <- 1
+n_reps <- 20
+
+# Distributions to draw from, with randomized parameters
+dist_functions <- list(
+  w_rnorm = function(n) rnorm(n, runif(1, 0, 10), runif(1, 0, 10)),
+  w_runif = function(n) {
+    min <- runif(1, -12.5, 12.5)
+    max  <- min + runif(1, 0, 12.5)
+    runif(n, min, max)},
+  w_rgamma = function(n) rgamma(n, runif(1, 0, 5)),
+  w_rweibull = function(n) rweibull(n, runif(1, 1, 5)),
+  w_rchisq = function(n) rchisq(n, runif(1, 0, 5))
+)
+# Generate n items, each from one of the above distributions, no two items should look very alike
+tmp <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+
+# sample random items, do this a few times
+tmp_sample <- map(1:n_reps, function(rep_id) {
+  tmp[,sample(ncol(tmp), n_items_sample)] %>%  
+    estimate_knapsack_utility(n_players) %>% 
+    strat_minimax_3() %>% 
+    mutate(rep_id = rep_id)
+})
+
+tmp_sample %>% 
+  map_dfr( ~ .x) %>% 
+  group_by(rep_id, knap_id) %>% 
+  summarise_if(is.numeric, mean) %>% 
+  ungroup() %>% 
+  select(probability, mean, sd, skewness, kurtosis, utility) %>% 
+  gather(measure, val, -probability) %>% 
+  mutate(measure = as.factor(measure)) %>% 
+  ggplot(aes(val, probability)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  facet_wrap( ~ measure, scales = "free")
+```
+
+# Question 1
+
+Does minimax try to approximate a uniform distribution?
+
+* $n = 3$ (three players)
+    - $b_i = 1$ for all $i$ (all have a budget of one)
+* $m > n$ (more than one item)
+    - All $v_j$ are non-normal, have different expectation, different variance, and are symmetric.
+    - $p_j = 1$ for all $j$ (all items have a price of one)
+
+```{r question-1}
+n_players <- 3
+n_items <- 15
+knap_size <- 1
+
+# Distributions to draw from, with randomized parameters
+dist_functions <- list(
+  w_rnorm = function(n) rnorm(n, runif(1, 0, 5), runif(1, 0, 5)),
+  w_runif = function(n) {
+    min <- runif(1, -2.5, 2.5)
+    max  <- min + runif(1, 2.5, 2.5)
+    runif(n, min, max)}#,
+  # w_rgamma = function(n) rgamma(n, runif(1, 0, 5)),
+  # w_rweibull = function(n) rweibull(n, runif(1, 1, 5)),
+  # w_rchisq = function(n) rchisq(n, runif(1, 0, 5))
+)
+# Generate n items, each from one of the above distributions, no two items should look very alike
+tmp_mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+tmp_u <- tmp_mat %>% 
+  estimate_knapsack_utility(n_players) %>% 
+  strat_minimax_3()
+
+# Weight tmp_mat by utility
+pr <- tmp_u %>% group_by(knap_id) %>% summarise(pr = mean(probability)) %>% pull(pr)
+tmp_mat <- as_data_frame(tmp_mat)
+tmp_mat$minimax_weighted <- (map_dfc(1:ncol(tmp_mat), ~ tmp_mat[,.x]*pr[.x]) %>% rowSums())/sum(pr > 0)
+
+# tmp_mat %>% 
+#   gather(item, val) %>% 
+#   mutate(class = ifelse(item == "minimax_weighted", "minimax_weighted", "unweighted"),
+#          highlight = ifelse(item %in% paste0("V", which(pr > 0)), T, F)) %>% 
+#   ggplot(aes(val, fill = highlight, colour = item)) +
+#   geom_density(alpha = 0.3) +
+#   facet_grid(. ~ class)
+tmp_mat %>%
+  gather(item, val) %>%
+  mutate(highlight = case_when(
+    item %in% paste0("V", which(pr > 0)) ~ "Part of minimax",
+    item == "minimax_weighted" ~ "minimax_weighted",
+    T ~ "Other"
+  )) %>%
+  ggplot(aes(val, fill = highlight, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_grid(. ~ highlight)
+```
+
