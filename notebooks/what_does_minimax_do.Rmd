@@ -67,8 +67,7 @@ dist_functions <- list(
     max <- ifelse(max < min, abs(max)+min, max)
     runif(n, min, max)
   },
-  wrgamma = function(n) rgamma(n, runif(1, 0, 5))#,
-  # wrweibull = function(n) rweibull(n, runif(1, 0.1, 5))
+  wrgamma = function(n) rgamma(n, runif(1, 0, 5))
 )
 ```
 
@@ -91,51 +90,57 @@ n_players <- 2
 Run simulations.
 
 ```{r two-player-knaps}
-# In parallel?
-cl <- makeCluster(16)
-clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
-                    "strat_minimax_2"))
-clusterEvalQ(cl, {
-  # For data manipulation
-  library(dplyr)
-  library(purrr)
-  library(tidyr)
-  # For kurtosis and skew functions
-  library(e1071)
-  # For fast combinations
-  library(RcppAlgos)
-  # For compiling functions to bytecode, this usually nets a tiny speedup
-  library(compiler)
-  # For linear programming
-  library(ROI)
-  library(ROI.plugin.glpk)
-  library(ompr)
-  library(ompr.roi)
-})
-knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
-  mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
-  minimax <- estimate_knapsack_utility(mat, n_players) %>%
-    strat_minimax_2() %>%
+if (!file.exists("../sims/two_player_minimax_results.Rds")) {
+  # In parallel?
+  cl <- makeCluster(16)
+  clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
+                      "strat_minimax_2"))
+  clusterEvalQ(cl, {
+    # For data manipulation
+    library(dplyr)
+    library(purrr)
+    library(tidyr)
+    # For kurtosis and skew functions
+    library(e1071)
+    # For fast combinations
+    library(RcppAlgos)
+    # For compiling functions to bytecode, this usually nets a tiny speedup
+    library(compiler)
+    # For linear programming
+    library(ROI)
+    library(ROI.plugin.glpk)
+    library(ompr)
+    library(ompr.roi)
+  })
+  
+  knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
+    mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+    minimax <- estimate_knapsack_utility(mat, n_players) %>%
+      strat_minimax_2() %>%
+      group_by(knap_id) %>%
+      summarise_if(is.numeric, mean) %>%
+      arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
+    mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
+    as_data_frame(mat) %>%
+      mutate(minimax_weighted = mat_minimax_weighted) %>%
+      gather(knap_id, value) %>%
+      mutate(knap_id = gsub("V", "", knap_id)) %>%
+      left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
+      mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
+  })
+  
+  stopCluster(cl)
+  
+  knaps <- bind_rows(knaps) %>% 
     group_by(knap_id) %>%
-    summarise_if(is.numeric, mean) %>%
-    arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
-  mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
-  as_data_frame(mat) %>%
-    mutate(minimax_weighted = mat_minimax_weighted) %>%
-    gather(knap_id, value) %>%
-    mutate(knap_id = gsub("V", "", knap_id)) %>%
-    left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
-    mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
-})
-
-stopCluster(cl)
-
-knaps <- bind_rows(knaps) %>% 
-  group_by(knap_id) %>%
-  mutate(
-    mean = mean(value), sd = sd(value),
-    skewness = skewness(value), kurtosis = kurtosis(value)
-  )
+    mutate(
+      mean = mean(value), sd = sd(value),
+      skewness = skewness(value), kurtosis = kurtosis(value)
+    )
+  saveRDS(knaps, "../sims/two_player_minimax_results.Rds")
+} else {
+  knaps <- readRDS("../sims/two_player_minimax_results.Rds")
+}
 ```
 
 Plot knapsack descriptives for knapsacks that received positive probability.
@@ -168,10 +173,9 @@ knaps %>%
 #   facet_grid(sim_id ~ label, scales = "free")
 ```
 
-
 # Three Players
 
-Set two players.
+Set three players.
 
 ```{r three-player-settings}
 n_players <- 3
@@ -180,51 +184,57 @@ n_players <- 3
 Run simulations.
 
 ```{r three-player-knaps}
-# In parallel?
-cl <- makeCluster(16)
-clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
-                    "strat_minimax_3"))
-clusterEvalQ(cl, {
-  # For data manipulation
-  library(dplyr)
-  library(purrr)
-  library(tidyr)
-  # For kurtosis and skew functions
-  library(e1071)
-  # For fast combinations
-  library(RcppAlgos)
-  # For compiling functions to bytecode, this usually nets a tiny speedup
-  library(compiler)
-  # For linear programming
-  library(ROI)
-  library(ROI.plugin.glpk)
-  library(ompr)
-  library(ompr.roi)
-})
-knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
-  mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
-  minimax <- estimate_knapsack_utility(mat, n_players) %>%
-    strat_minimax_3() %>%
+if (!file.exists("../sims/three_player_minimax_results.Rdata")) {
+  # In parallel?
+  cl <- makeCluster(16)
+  clusterExport(cl, c("n_items", "n_players", "dist_functions", "n_draws", "estimate_knapsack_utility",
+                      "strat_minimax_3"))
+  clusterEvalQ(cl, {
+    # For data manipulation
+    library(dplyr)
+    library(purrr)
+    library(tidyr)
+    # For kurtosis and skew functions
+    library(e1071)
+    # For fast combinations
+    library(RcppAlgos)
+    # For compiling functions to bytecode, this usually nets a tiny speedup
+    library(compiler)
+    # For linear programming
+    library(ROI)
+    library(ROI.plugin.glpk)
+    library(ompr)
+    library(ompr.roi)
+  })
+  
+  knaps <- parLapply(cl, 1:n_knap_sims, function(.x) {
+    mat <- replicate(n_items, dist_functions[[sample(1:length(dist_functions), 1)]](n_draws))
+    minimax <- estimate_knapsack_utility(mat, n_players) %>%
+      strat_minimax_3() %>%
+      group_by(knap_id) %>%
+      summarise_if(is.numeric, mean) %>%
+      arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
+    mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
+    as_data_frame(mat) %>%
+      mutate(minimax_weighted = mat_minimax_weighted) %>%
+      gather(knap_id, value) %>%
+      mutate(knap_id = gsub("V", "", knap_id)) %>%
+      left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
+      mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
+  })
+  
+  stopCluster(cl)
+  
+  knaps <- bind_rows(knaps) %>% 
     group_by(knap_id) %>%
-    summarise_if(is.numeric, mean) %>%
-    arrange(knap_id) %>% mutate(knap_id = as.character(knap_id))
-  mat_minimax_weighted <- apply(mat, 1, function(x) weighted.mean(x, minimax$probability))
-  as_data_frame(mat) %>%
-    mutate(minimax_weighted = mat_minimax_weighted) %>%
-    gather(knap_id, value) %>%
-    mutate(knap_id = gsub("V", "", knap_id)) %>%
-    left_join(select(minimax, knap_id, utility, probability), by = "knap_id") %>%
-    mutate(knap_id = paste0(knap_id, "_", .x), sim_id = .x)
-})
-
-stopCluster(cl)
-
-knaps <- bind_rows(knaps) %>% 
-  group_by(knap_id) %>%
-  mutate(
-    mean = mean(value), sd = sd(value),
-    skewness = skewness(value), kurtosis = kurtosis(value)
-  )
+    mutate(
+      mean = mean(value), sd = sd(value),
+      skewness = skewness(value), kurtosis = kurtosis(value)
+    )
+  saveRDS(knaps, "../sims/three_player_minimax_results.Rds")
+} else {
+  knaps <- readRDS("../sims/three_player_minimax_results.Rds")
+}
 ```
 
 Plot knapsack descriptives for knapsacks that received positive probability.

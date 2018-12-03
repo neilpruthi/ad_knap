@@ -69,7 +69,7 @@ estimate_knapsack_utility <- function(knapsacks, n_players) {
           tie_cols <- colSums(current_knap == opp_knaps) == nrow(knapsacks)
         else
           tie_cols <- sum(opp_knaps == current_knap) == nrow(knapsacks)
-
+        
         # subset out any tying columns
         if (any(tie_cols) & class(opp_knaps) == "matrix")
           opp_knaps <- opp_knaps[ , !tie_cols]
@@ -190,5 +190,6 @@ strat_minimax_3 <- function(knaps, print_results = F) {
     print(tmp$solution)
   data_frame(knap_id = strats, 
              probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
-    left_join(knaps, by = "knap_id")}
+    left_join(knaps, by = "knap_id")
+}
 strat_minimax_3 <- cmpfun(strat_minimax_3)
