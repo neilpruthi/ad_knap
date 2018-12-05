@@ -165,8 +165,8 @@ strat_minimax_2 <- function(knaps, print_results = F) {
   )
   if (print_results)
     print(tmp$solution)
-  data_frame(knap_id = strats, 
-             probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
+  data_frame(knap_id = row_strats, 
+             probability = as.numeric(tmp$solution)[-(length(row_strats)+1)]) %>% 
     left_join(knaps, by = "knap_id")
 }
 strat_minimax_2 <- cmpfun(strat_minimax_2)
