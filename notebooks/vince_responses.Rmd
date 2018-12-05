@@ -90,7 +90,8 @@ tmp_aug <- tmp_aug %>% as_data_frame() %>%
 
 ggplot(tmp_aug, aes(val, fill = item, colour = item)) +
   geom_density(alpha = 0.3) +
-  facet_wrap(. ~ mark, ncol = 1)
+  facet_wrap(. ~ mark, ncol = 1) +
+  theme(legend.position = "none")
 
 tmp_aug %>% 
   group_by(item) %>% 
