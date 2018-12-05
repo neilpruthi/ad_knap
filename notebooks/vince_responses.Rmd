@@ -57,16 +57,7 @@ tmp %>%
 Doing this with an actual minimax result:
 
 ```{r}
-tmp <- matrix(c(
-  rnorm(n_draws, 0, 1),
-  rnorm(n_draws, 0, 3),
-  rnorm(n_draws, 0, 5),
-  rnorm(n_draws, 0, 7),
-  rnorm(n_draws, 2, 5),
-  rnorm(n_draws, 3, 2),
-  rnorm(n_draws, 2, 7),
-  rnorm(n_draws, 4, 1)
-), ncol = 8)
+tmp <- replicate(40, rnorm(n_draws, runif(1, 0, 10), runif(1, 0, 10)))
 
 tmp_mini <- tmp %>% 
   estimate_knapsack_utility(3) %>% 
@@ -92,7 +83,7 @@ tmp_aug <- cbind(
 
 tmp_aug <- tmp_aug %>% as_data_frame() %>% 
   gather(item, val) %>% 
-  mutate(item = ifelse(item == "V9", "Minimax", item),
+  mutate(item = ifelse(item == paste0("V", (ncol(tmp) + 1)), "Minimax", item),
          mark = case_when(item == "Minimax" ~ "Minimax",
                           item %in% tmp_mini_comp ~ "Minimax Component",
                           T ~ "Not Used by Minimax"))
@@ -104,7 +95,8 @@ ggplot(tmp_aug, aes(val, fill = item, colour = item)) +
 tmp_aug %>% 
   group_by(item) %>% 
   summarise(mean = mean(val), sd = sd(val), skewness = skewness(val), kurtosis = kurtosis(val),
-            mark = unique(mark))
+            mark = unique(mark)) %>% 
+  arrange(mark)
 ```
 
 

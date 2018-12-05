@@ -36,8 +36,6 @@ library(ompr)
 library(ompr.roi)
 # For plots and tables
 library(ggplot2)
-library(knitr)
-library(kableExtra)
 # For parallelization
 library(parallel)
 ```
