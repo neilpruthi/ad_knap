@@ -1,0 +1,111 @@
+---
+title: "Vince's Qs"
+author: "Ben Ewing Neil Pruthi"
+date: "November 25, 2018"
+output:
+  pdf_document: default
+header-includes:
+  - \usepackage{amsfonts}
+  - \usepackage{stmaryrd}
+  - \usepackage{bm}
+  - \usepackage{bbm}
+geometry: margin=2cm
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+```{r setup}
+library(tidyverse)
+source("../r/knapsack_functions_mat.R")
+n_draws = 100000
+```
+
+# Notes
+
+Mean invariance for two players.
+```{r}
+prop.table(table(rnorm(n_draws, 0, 1) > rnorm(n_draws, 0, 2)))
+```
+
+Mean invariance for three players, and three items.
+
+...
+
+We can think of a minimax strategy as a [mixture distribution](https://en.wikipedia.org/wiki/Mixture_distribution). The variance and expectation can be found using the same approaches as mixtures. 
+
+```{r}
+tmp <- data_frame(
+  n_0_1 = rnorm(n_draws, 0, 1), 
+  n_0_4 = rnorm(n_draws, 0, 4), 
+  # This is what we expect 50/50 minimax strategy to generate
+  n_comp = rnorm(n_draws, 0, sqrt(0.5*(0+1)+0.5*(0+16) - 0^2)),
+  # the mixture
+  n_mix = c(rnorm(n_draws/2, 0, 1), rnorm(n_draws/2, 0, 4))
+) %>% 
+  gather(item, val)
+
+ggplot(tmp, aes(val, fill = item, colour = item)) + 
+  geom_density(alpha = 0.1)
+
+tmp %>% 
+  group_by(item) %>% 
+  summarise(mean = mean(val), sd = sd(val), var = var(val))
+```
+
+Doing this with an actual minimax result:
+
+```{r}
+tmp <- matrix(c(
+  rnorm(n_draws, 0, 1),
+  rnorm(n_draws, 0, 3),
+  rnorm(n_draws, 0, 5),
+  rnorm(n_draws, 0, 7),
+  rnorm(n_draws, 2, 5),
+  rnorm(n_draws, 3, 2),
+  rnorm(n_draws, 2, 7),
+  rnorm(n_draws, 4, 1)
+), ncol = 8)
+
+tmp_mini <- tmp %>% 
+  estimate_knapsack_utility(3) %>% 
+  strat_minimax_3(tmp)
+
+tmp_mini$solution
+
+# Minimax components
+tmp_mini_comp <- paste0("V", which(tmp_mini$solution[-length(tmp_mini$solution)] > 0))
+
+# create a mixture as prescribed
+tmp_aug <- cbind(
+  tmp,
+  map(1:(length(tmp_mini$solution) - 1), ~ {
+    if (tmp_mini$solution[.x] > 0)
+      tmp[,.x][1:ceiling(n_draws*tmp_mini$solution[.x])]
+    else
+      numeric()
+  }) %>% 
+    unlist() %>% 
+    .[1:n_draws]
+)
+
+tmp_aug <- tmp_aug %>% as_data_frame() %>% 
+  gather(item, val) %>% 
+  mutate(item = ifelse(item == "V9", "Minimax", item),
+         mark = case_when(item == "Minimax" ~ "Minimax",
+                          item %in% tmp_mini_comp ~ "Minimax Component",
+                          T ~ "Not Used by Minimax"))
+
+ggplot(tmp_aug, aes(val, fill = item, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(. ~ mark, ncol = 1)
+
+tmp_aug %>% 
+  group_by(item) %>% 
+  summarise(mean = mean(val), sd = sd(val), skewness = skewness(val), kurtosis = kurtosis(val),
+            mark = unique(mark))
+```
+
+
+

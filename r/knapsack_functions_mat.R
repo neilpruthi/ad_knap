@@ -186,10 +186,11 @@ strat_minimax_3 <- function(knaps, print_results = F) {
       add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
       solve_model(with_ROI(solver = "glpk"))
   )
-  if (print_results)
-    print(tmp$solution)
-  data_frame(knap_id = strats, 
-             probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
-    left_join(knaps, by = "knap_id")
+  tmp
+  # if (print_results)
+  #   print(tmp$solution)
+  # data_frame(knap_id = strats, 
+  #            probability = as.numeric(tmp$solution)[-(length(strats)+1)]) %>% 
+  #   left_join(knaps, by = "knap_id")
 }
 strat_minimax_3 <- cmpfun(strat_minimax_3)
