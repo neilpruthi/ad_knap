@@ -1,0 +1,65 @@
+---
+title: "Semi Bernoulli Items"
+author: "Ben Ewing and Neil Pruthi"
+date: "December 7, 2018"
+output: pdf_document
+---
+
+# Setup
+
+```{r setup}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(purrr)
+# For linear programming
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+# Knapsack functions
+source("../r/knapsack_functions_mat.R")
+# Simulation settings
+n_draws = 10000
+```
+
+# Case 1
+
+* $n = 4$
+* $m = 4$ items
+* equal means
+* different variances
+
+```{r case-1}
+items <- matrix(c(
+  c(-1, 1)[rep(c(1, 2), n_draws)], # [rbinom(n_draws, 1, 0.5) + 1],
+  c(-2, 2)[rep(c(1, 2), n_draws)], # [rbinom(n_draws, 1, 0.5) + 1],
+  c(-3, 3)[rep(c(1, 2), n_draws)], # [rbinom(n_draws, 1, 0.5) + 1],
+  c(-4, 4)[rep(c(1, 2), n_draws)] # [rbinom(n_draws, 1, 0.5) + 1]
+), ncol = 4)
+
+# utility <- estimate_knapsack_utility(items, 3)# %>% distinct()
+
+utility <- data_frame(
+  knap_id = c(1, 1, 1, 2, 2, 2),
+  matchup = c("1;1;1", "1;1;2", "1;2;2", "2;1;1", "2;2;1", "2;2;2"),
+  utility = c(0, -0.25, 0.5, 0.5, -0.25, 0)
+)
+
+mini <- strat_minimax_3(utility)
+mini
+mini$solution
+
+apply(items, 2, mean)
+
+strats <- sort(unique(knaps$knap_id))
+MIPModel() %>%
+  add_variable(row_utility, type = "continuous") %>%
+  add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
+  set_objective(row_utility, "max") %>%
+  add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j, k)), collapse = ";")], i = strats) >= row_utility,
+                 j = strats, k = strats) %>%
+  add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
+  solve_model(with_ROI(solver = "glpk"))
+
+```

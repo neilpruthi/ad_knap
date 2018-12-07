@@ -6,7 +6,7 @@ source('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/r/single_comparison.R
 
 ### set mean = 10
 mu <- 10
-
+   
 ### make distributions
 dists_full <- list('Uniform', 
 	'Uniform', 
