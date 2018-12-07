@@ -153,8 +153,7 @@ strat_minimax_2 <- function(knaps, print_results = F) {
   row_strats <- sort(unique(knaps$knap_id))
   col_strats <- sort(unique(knaps$knap_id))
   
-  tmp <- 
-    MIPModel() %>%
+  tmp <- MIPModel() %>%
       add_variable(row_utility, type = "continuous") %>%
       add_variable(row_pr[i], i = row_strats, type = "continuous", lb = 0, ub = 1) %>%
       set_objective(row_utility, "max") %>%
@@ -176,8 +175,7 @@ strat_minimax_3 <- function(knaps, print_results = F) {
   
   strats <- sort(unique(knaps$knap_id))
   
-  tmp <- suppressWarnings(
-    MIPModel() %>%
+  tmp <- MIPModel() %>%
       add_variable(row_utility, type = "continuous") %>%
       add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
       set_objective(row_utility, "max") %>%
@@ -185,7 +183,6 @@ strat_minimax_3 <- function(knaps, print_results = F) {
                      j = strats, k = strats) %>%
       add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
       solve_model(with_ROI(solver = "glpk"))
-  )
   tmp
   # if (print_results)
   #   print(tmp$solution)
