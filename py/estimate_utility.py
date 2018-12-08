@@ -1,6 +1,6 @@
 import numpy as np
 import itertools as it
-from joblib import Parallel, delayed
+# from joblib import Parallel, delayed
 from collections import ChainMap
 
 def match_results(match):
