@@ -1,0 +1,58 @@
+---
+title: ""
+output: html_document
+---
+
+# Setup
+
+R setup.
+
+```{r r-setup, include = FALSE}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(purrr)
+# For linear programming
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+```
+
+Python/reticulate setup.
+
+```{r py-setup}
+library(reticulate)
+use_python("C:/ProgramData/Anaconda3/python.exe")
+
+# Load utility functions
+source_python("../py/estimate_utility.py")
+# and Numpy
+np <- import("numpy", convert=FALSE)
+```
+
+# Examples
+
+```{r ex1}
+test <- np_array(matrix(1:9, ncol = 3))
+testu <- list2env(est_knap_u(test, n_players = as.integer(2)))
+```
+
+```{r}
+minimax <- function(utilities, n_players) {
+  m <- MIPModel() %>%
+    add_variable(row_utility, type = "continuous") %>%
+    add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
+    set_objective(row_utility, "max") %>%
+    add_constraint(sum_expr(row_pr[i], i = strats) == 1)
+  
+  # Add utiltiy constraint over all players
+      # add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j, k)), collapse = ";")], i = strats) >= row_utility,
+      #              j = strats, k = strats)
+  
+  solve_model(m, with_ROI(solver = "glpk")) 
+}
+```
+
+
+
