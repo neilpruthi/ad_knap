@@ -1,0 +1,178 @@
+---
+title: "Semi Bernoulli Items"
+author: "Ben Ewing and Neil Pruthi"
+date: "December 7, 2018"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+R setup.
+
+```{r r-setup, include = FALSE}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(e1071)
+# For linear programming
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+# Plotting
+library(ggplot2)
+library(ggthemes)
+theme_set(theme_tufte())
+# Minimax
+source("../r/n_player_minimax.R")
+# Simulation settings
+n_draws <- 5000
+```
+
+Python/reticulate setup.
+
+```{r py-setup}
+library(reticulate)
+use_python("C:/ProgamData/Anaconda3/python.exe")
+# Load utility functions
+source_python("../py/estimate_utility.py")
+# and Numpy
+np <- import("numpy", convert=FALSE)
+```
+
+# Three Player Simulations
+
+```{r three-player}
+n_players <- 3
+```
+
+Will minimax attempt to approximate a uniform distribution when given a set of normal items, with three players?
+
+## Expected Value: 0
+
+It is equally likely for an item to take positive and negative values.
+
+```{r exp0-density, warning = FALSE, cache = TRUE}
+# Generate items
+items <- sapply(seq(2, 10, 0.15), function(x) rnorm(n_draws, 0, x))
+
+# A density plot
+items %>% 
+  as_tibble() %>% 
+  gather(item, val) %>% 
+  ggplot(aes(val, colour = item, fill = item)) +
+  geom_density(alpha = 0.10) +
+  xlim(c(-35, 35)) +
+  theme(legend.position = "none", axis.title = element_blank())
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# And run minimax
+mini <- minimax(items_u, n_players)
+mini$solution
+
+# Minimax components
+mini_comp <- paste0("V", which(mini$solution[-length(mini$solution)] > 0))
+
+# Create a mixture distribution and append to the end of items
+items_aug <- cbind(
+  items,
+  map(1:(length(mini$solution) - 1), ~ {
+    if (mini$solution[.x] > 0)
+      items[,.x][1:ceiling(n_draws*mini$solution[.x])]
+    else
+      numeric()
+  }) %>% 
+    unlist() %>% 
+    .[1:n_draws]
+)
+
+# To dataframe
+items_aug <- items_aug %>% 
+  as_data_frame() %>% 
+  gather(item, val) %>% 
+  mutate(item = ifelse(item == paste0("V", (ncol(items) + 1)), "Minimax", item),
+         mark = case_when(item == "Minimax" ~ "Minimax",
+                          item %in% mini_comp ~ "Minimax Component",
+                          T ~ "Not Used by Minimax"))
+
+# Plot again
+ggplot(items_aug, aes(val, fill = item, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(. ~ mark, ncol = 1) +
+  theme(legend.position = "none")
+
+# Summary statistics
+items_aug %>% 
+  group_by(item) %>% 
+  summarise(mean = mean(val), sd = sd(val), skewness = skewness(val), kurtosis = kurtosis(val),
+            mark = unique(mark)) %>% 
+  arrange(mark)
+```
+
+# Expected Value: 10
+
+Items will mostly take on positive values.
+
+```{r exp10-density, warning = FALSE, cache = TRUE}
+# Generate items
+items <- sapply(seq(2, 10, 0.15), function(x) rnorm(n_draws, 10, x))
+
+# A density plot
+items %>% 
+  as_tibble() %>% 
+  gather(item, val) %>% 
+  ggplot(aes(val, colour = item, fill = item)) +
+  geom_density(alpha = 0.10) +
+  xlim(c(-35, 35)) +
+  theme(legend.position = "none", axis.title = element_blank())
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# And run minimax
+mini <- minimax(items_u, n_players)
+mini$solution
+
+# Minimax components
+mini_comp <- paste0("V", which(mini$solution[-length(mini$solution)] > 0))
+
+# Create a mixture distribution and append to the end of items
+items_aug <- cbind(
+  items,
+  map(1:(length(mini$solution) - 1), ~ {
+    if (mini$solution[.x] > 0)
+      items[,.x][1:ceiling(n_draws*mini$solution[.x])]
+    else
+      numeric()
+  }) %>% 
+    unlist() %>% 
+    .[1:n_draws]
+)
+
+# To dataframe
+items_aug <- items_aug %>% 
+  as_data_frame() %>% 
+  gather(item, val) %>% 
+  mutate(item = ifelse(item == paste0("V", (ncol(items) + 1)), "Minimax", item),
+         mark = case_when(item == "Minimax" ~ "Minimax",
+                          item %in% mini_comp ~ "Minimax Component",
+                          T ~ "Not Used by Minimax"))
+
+# Plot again
+ggplot(items_aug, aes(val, fill = item, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(. ~ mark, ncol = 1) +
+  theme(legend.position = "none")
+
+# Summary statistics
+items_aug %>% 
+  group_by(item) %>% 
+  summarise(mean = mean(val), sd = sd(val), skewness = skewness(val), kurtosis = kurtosis(val),
+            mark = unique(mark)) %>% 
+  arrange(mark)
+```

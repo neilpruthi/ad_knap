@@ -3,11 +3,15 @@ title: "Semi Bernoulli Items"
 author: "Ben Ewing and Neil Pruthi"
 date: "December 7, 2018"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Setup
 
-```{r setup}
+R setup.
+
+```{r r-setup, include = FALSE}
 # For data manipulation
 library(dplyr)
 library(purrr)
@@ -17,61 +21,96 @@ library(ROI)
 library(ROI.plugin.glpk)
 library(ompr)
 library(ompr.roi)
-# Knapsack functions
-source("../r/knapsack_functions_mat.R")
-# Simulation settings
-n_draws = 10000
+# Minimax
+source("../r/n_player_minimax.R")
+```
+
+Python/reticulate setup.
+
+```{r py-setup}
+library(reticulate)
+use_python("C:/ProgamData/Anaconda3/python.exe")
+# Load utility functions
+source_python("../py/estimate_utility.py")
+# and Numpy
+np <- import("numpy", convert=FALSE)
+```
+
+# Rock Paper Scissors Test
+
+```{r rps}
+n_players <- as.integer(2)
+
+items <- np_array(matrix(c(
+  c( 0, -1,  1, 
+     1,  0, -1, 
+     -1,  1,  0)
+), ncol = 3, byrow = T))
+
+items_u <- est_knap_u(items, n_players)
+
+minimax(items_u, n_players)$solution
 ```
 
 # Case 1
 
-* $n = 4$
-* $m = 4$ items
-* equal means
-* different variances
-
 ```{r case-1}
-items <- matrix(c(
-  c(-1, 1)[rep(c(1, 2), n_draws)], # [rbinom(n_draws, 1, 0.5) + 1],
-  c(-2, 2)[rep(c(1, 2), n_draws)], # [rbinom(n_draws, 1, 0.5) + 1],
-  c(-3, 3)[rep(c(1, 2), n_draws)] # [rbinom(n_draws, 1, 0.5) + 1],
-  # c(-4, 4)[rep(c(1, 2), n_draws)] # [rbinom(n_draws, 1, 0.5) + 1]
-), ncol = 3)
+n_players <- as.integer(3)
+m_items <- 4
 
-utility <- estimate_knapsack_utility(items, 3)# %>% distinct()
+items <- np_array(matrix(c(
+  c(  1,  2,  3,  4,
+     -1, -2, -3, -4,
+      1,  2,  3,  4,
+     -1, -2, -3, -4)
+), ncol = m_items, byrow = T))
 
-utility <- data_frame(
-  knap_id = c(1, 1, 1, 2, 2, 2),
-  matchup = c("1;1;1", "1;1;2", "1;2;2", "2;1;1", "2;2;1", "2;2;2"),
-  utility = c(0, -0.25, 0.5, 0.5, -0.25, 0)
-)
+items_u <- est_knap_u(items, n_players)
 
-test <- array(0, dim = c(2,2,3))
-test[1, 1, 1] <- 0
-test[2, 2, 2] <- 0
-
-
-# mini <- strat_minimax_3(utility)
-# mini
-# mini$solution
-
-apply(items, 2, mean)
-
-strats <- sort(unique(utility$knap_id))
-MIPModel() %>%
-  add_variable(row_utility, type = "continuous") %>%
-  add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
-  set_objective(row_utility, "max") %>%
-  add_constraint(sum_expr(row_pr[i]*utility$utility[utility$knap_id == i & utility$matchup == paste0(sort(c(i, j, k)), collapse = ";")], i = strats) >= row_utility,
-                 j = strats, k = strats) %>%
-  add_constraint(sum_expr(row_pr[i], i = strats) == 1) %>%
-  solve_model(with_ROI(solver = "glpk"))
-
+minimax(items_u, n_players)$solution
 ```
 
+Case 1 extended
 
-```{python}
-import numpy as np
-def estimate_knapsack_utility(items, n) :
-  print("test")
+```{r case-1-ex}
+n_players <- as.integer(3)
+n_draws <- 1000
+m_items <- 5
+
+items <- np_array(matrix(c(
+  c(-1, 1)[rbinom(n_draws, 1, 0.5) + 1], 
+  c(-2, 2)[rbinom(n_draws, 1, 0.5) + 1],
+  c(-3, 3)[rbinom(n_draws, 1, 0.5) + 1],
+  c(-4, 4)[rbinom(n_draws, 1, 0.5) + 1],
+  c(-20, 20)[rbinom(n_draws, 1, 0.5) + 1]
+), ncol = m_items))
+np$nanmean(items, axis = as.integer(0))
+np$nanvar(items, axis = as.integer(0))
+
+items_u <- est_knap_u(items, n_players)
+
+minimax(items_u, n_players)$solution
+```
+
+Case 1 extended more.
+
+```{r case-1-ex-more}
+n_players <- as.integer(3)
+n_draws <- 1000
+m_items <- 5
+
+map_df(seq(5, 25, 3), ~ {
+  print(.x)
+  items <- sapply(sample(1:.x, size = round(.x/2), replace = F), function(x) c(-x, x)[rbinom(n_draws, 1, 0.5) + 1])
+  imean <- np$nanmean(items, axis = as.integer(0))
+  ivar <- np$nanvar(items, axis = as.integer(0))
+  items_u <- est_knap_u(items, n_players)
+  mini <- as.vector(minimax(items_u, n_players)$solution)
+  data_frame(
+    pr = mini[-length(mini)],
+    mean = as.vector(np$nanmean(items, axis = as.integer(0))),
+    var = as.vector(np$nanvar(items, axis = as.integer(0))),
+    run = .x
+  )
+})
 ```

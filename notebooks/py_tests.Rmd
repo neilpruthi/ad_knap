@@ -36,9 +36,35 @@ np <- import("numpy", convert=FALSE)
 
 ```{r ex1}
 test <- np_array(matrix(1:9, ncol = 3))
-testu <- list2env(est_knap_u(test, n_players = as.integer(2)))
-minimax(testu, 3)$solution
+testu <- list2env(est_knap_u(test, n_players = as.integer(3)))
+# minimax(testu, 3)$solution
 ```
+
+
+```{r}
+strats <- unique(map_chr(names(testu), ~ substr(.x, 1, 1)))
+opp_strats <- unique(map_chr(names(testu), ~ substr(.x, 2, n_players)))
+# Indices
+strats_i <- 1:length(strats)
+opp_strats_i <- 1:length(opp_strats)
+
+m <- MIPModel() %>%
+  add_variable(utility, type = "continuous") %>%
+  add_variable(pr[i], i = strats_i, type = "continuous", lb = 0, ub = 1) %>%
+  set_objective(utility, "max") %>%
+  add_constraint(sum_expr(pr[i], i = strats_i) == 1) %>% 
+  add_constraint(sum_expr(pr[i]*testu[[paste0(strats[i], opp_strats[j])]], 
+                          i = strats_i) >= utility, 
+                 j = opp_strats_i) %>% 
+  solve_model(with_ROI(solver = "glpk"))
+
+m$solution
+```
+
+
+
+
+
 
 
 
