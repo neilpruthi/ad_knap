@@ -1,5 +1,5 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -24,8 +24,6 @@ theorems-ams-bytype
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
-\use_microtype false
-\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -66,7 +64,6 @@ theorems-ams-bytype
 \suppress_date false
 \justification true
 \use_refstyle 1
-\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -79,10 +76,7 @@ theorems-ams-bytype
 \tocdepth 3
 \paragraph_separation skip
 \defskip bigskip
-\is_math_indent 0
-\math_numbering_side default
-\quotes_style english
-\dynamic_quotes 0
+\quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -109,24 +103,6 @@ December 11, 2018
 
 \begin_layout Section
 Introduction
-\end_layout
-
-\begin_layout Standard
-Suppose we have a game in which each agent faces a knapsack problem.
- Each agent chooses items to place in her knapsack, and them goes out into
- the world.
- The value of each item is a 
-\emph on
-random variable
-\emph default
-.
- We might imagine, for instance, an agent choosing 
-\emph on
-bearspray
-\emph default
- for her knapsack, and then going out into a world in which there are many
- bears, and bearspray is highly coveted.
- 
 \end_layout
 
 \begin_layout Subsection
