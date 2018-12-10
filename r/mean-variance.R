@@ -57,3 +57,26 @@ dev.off()
 
 ##########
 
+##### STEP 2: SKEWED DISTRIBUTIONS, FIXED NUMBER OF PLAYERS #####
+
+# ### set sequence of mean values, number of players, distributions
+# mean_seq_skew <- seq(5.25, 9.75, by = 0.25)
+# players_skew <- c(2, 4, 5, 10)
+
+# ### create matrices
+# mv_gamma <- matrix(NA, length(mean_seq_skew), length(players_skew) + 1)
+# mv_gamma[, 1] <- mean_seq_skew
+# colnames(mv_gamma) <- c('Mean', paste0(players_skew, '-players'))
+
+# ### set initial value
+# eps <- 1e-10
+
+# for(p in 1:length(players_skew)) {
+# 	for(j in 1:length(mean_seq_skew)) {
+# 		print(paste0(mean_seq_skew[j], ' ', p))
+# 		mu <- mean_seq_skew[j]
+# 		params_gamma <- quote(c(list(c(shape = (mu^2)/5, scale = 5/mu), c(shape = i, scale = 5/i)), list(c(shape = 5, scale = 1))[rep(1, players_skew[p]-2)]))
+# 		mv_gamma[j, p + 1] <- compare(dists = list('Gamma')[rep(1,players_skew[p])], params = params_gamma, initval = 1, inc = 1000)[1]
+# 	}
+# }
+
