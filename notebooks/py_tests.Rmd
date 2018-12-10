@@ -17,14 +17,15 @@ library(ROI)
 library(ROI.plugin.glpk)
 library(ompr)
 library(ompr.roi)
+# Minimax
+source("../r/n_player_minimax.R")
 ```
 
 Python/reticulate setup.
 
 ```{r py-setup}
 library(reticulate)
-use_python("C:/ProgramData/Anaconda3/python.exe")
-
+use_python("C:/ProgamData/Anaconda3/python.exe")
 # Load utility functions
 source_python("../py/estimate_utility.py")
 # and Numpy
@@ -35,24 +36,36 @@ np <- import("numpy", convert=FALSE)
 
 ```{r ex1}
 test <- np_array(matrix(1:9, ncol = 3))
-testu <- list2env(est_knap_u(test, n_players = as.integer(2)))
+testu <- list2env(est_knap_u(test, n_players = as.integer(3)))
+# minimax(testu, 3)$solution
 ```
 
+
 ```{r}
-minimax <- function(utilities, n_players) {
-  m <- MIPModel() %>%
-    add_variable(row_utility, type = "continuous") %>%
-    add_variable(row_pr[i], i = strats, type = "continuous", lb = 0, ub = 1) %>%
-    set_objective(row_utility, "max") %>%
-    add_constraint(sum_expr(row_pr[i], i = strats) == 1)
-  
-  # Add utiltiy constraint over all players
-      # add_constraint(sum_expr(row_pr[i]*knaps$utility[knaps$knap_id == i & knaps$matchup == paste0(sort(c(i, j, k)), collapse = ";")], i = strats) >= row_utility,
-      #              j = strats, k = strats)
-  
-  solve_model(m, with_ROI(solver = "glpk")) 
-}
+strats <- unique(map_chr(names(testu), ~ substr(.x, 1, 1)))
+opp_strats <- unique(map_chr(names(testu), ~ substr(.x, 2, n_players)))
+# Indices
+strats_i <- 1:length(strats)
+opp_strats_i <- 1:length(opp_strats)
+
+m <- MIPModel() %>%
+  add_variable(utility, type = "continuous") %>%
+  add_variable(pr[i], i = strats_i, type = "continuous", lb = 0, ub = 1) %>%
+  set_objective(utility, "max") %>%
+  add_constraint(sum_expr(pr[i], i = strats_i) == 1) %>% 
+  add_constraint(sum_expr(pr[i]*testu[[paste0(strats[i], opp_strats[j])]], 
+                          i = strats_i) >= utility, 
+                 j = opp_strats_i) %>% 
+  solve_model(with_ROI(solver = "glpk"))
+
+m$solution
 ```
+
+
+
+
+
+
 
 
 

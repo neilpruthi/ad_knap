@@ -1,6 +1,6 @@
 import numpy as np
 import itertools as it
-from joblib import Parallel, delayed
+# from joblib import Parallel, delayed
 from collections import ChainMap
 
 def match_results(match):
@@ -21,14 +21,14 @@ def est_knap_u(item_draws, n_players, parallel = False):
     n_knaps = item_draws.shape[1]
     
     if parallel:
-        a = lambda match: dict({''.join(str(e) for e in match): np.mean(np.apply_along_axis(match_results, 1, item_draws[:, match]))})
+        a = lambda match: dict({';'.join(str(e) for e in match): np.mean(np.apply_along_axis(match_results, 1, item_draws[:, match]))})
         utility = Parallel(n_jobs=16)(delayed(a)(match) for match in it.product(range(n_knaps), repeat=n_players))
         # Convert list of dicts to single dict
         utility = dict(ChainMap(*utility))
     else:
         utility = {}
         for match in it.product(range(n_knaps), repeat=n_players):       
-            utility[''.join(str(e) for e in match)] = np.mean(np.apply_along_axis(match_results, 1, item_draws[:, match]))
+            utility[';'.join(str(e) for e in match)] = np.mean(np.apply_along_axis(match_results, 1, item_draws[:, match]))
 
             
     return(utility)
