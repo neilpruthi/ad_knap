@@ -11,7 +11,7 @@ dist_names <- c('Uniform', 'Hypergeometric', 'Binomial', 'Poisson', 'Geometric',
 dist_funs <- c(runif, rhyper, rbinom, rpois, rgeom, rnbinom, rexp, rlnorm, rt, rnorm, 
 	rchisq, rweibull, rgamma, rbeta, rhnorm, rdunif)
 
-knapsack_compare <- function(dists, params, reps = 1, iters = 1000, summary = TRUE, store = FALSE, ...) {
+knapsack_compare <- function(dists, params, reps = 1, iters = 10000, summary = TRUE, store = FALSE, ...) {
 	
 	### get number of distributions
 	n <- length(dists)
@@ -77,7 +77,12 @@ knapsack_compare <- function(dists, params, reps = 1, iters = 1000, summary = TR
 	}
 
 	if(store) {
-		return(winpct)
+		missed <- setdiff(1:length(dists), names(winpct))
+		tab <- rep(0, length(missed))
+		names(tab) <- missed
+		out <- cbind(t(as.matrix(winpct)), t(as.matrix(tab)))
+		out <- as.table(out[, order(as.numeric(colnames(out)))])
+		return(out)
 	}
 }
 
@@ -85,5 +90,56 @@ knapsack_compare <- function(dists, params, reps = 1, iters = 1000, summary = TR
 #knapsack_compare(dists = list('Gamma', 'Negative Binomial'), params = list(c(shape = 6, rate = .4), c(size = 10, prob = .4)), reps = 1, iters = 100000)
 #knapsack_compare(dists = list('Uniform', 'Normal', 'Poisson', 'Exponential'), params = list(c(0, 1), c(0.5, 1), c(0.5), c(2)), reps = 1, iters = 10000)
 #knapsack_compare(dists = list('Uniform', 'Uniform', 'Uniform'), params = list(c(min = -1, max = 1), c(min = -2, max = 2), c(min = -3, max = 3)), reps = 1, iters = 100000)
+#knapsack_compare(dists = list('Uniform', 'Uniform', 'Uniform'), params = list(c(min = -1, max = 1), c(min = -4, max = -3), c(min = -3, max = 3)), reps = 1, iters = 10000, store = TRUE, summary = FALSE)
 #knapsack_compare(dists = list('Discrete Uniform', 'Discrete Uniform', 'Discrete Uniform'), params = list(c(min = -1, max = 1), c(min = -1, max = 1), c(min = -1, max = 1)), reps = 1, iters = 10000)
 #knapsack_compare(dists = list('Uniform', 'Normal', 'Binomial'), params = list(c(min = 5-sqrt(30)/2, max = 5+sqrt(30)/2), c(mean = 5, sd = sqrt(2.5)), c(size = 10, prob = .5)), iters = 100000)
+
+compare <- function(tol = 0.01, maxiter = 50, initval = 1, inc = 20, dists, params, ...) {
+	sign_flip <- 0
+	counter <- 1
+	i <- initval
+	results <- matrix(NA, maxiter, length(dists) + 2)
+	colnames(results) <- c('Value', paste0('Winpct ', 1:length(dists)), 'Margin')
+	diff_i <- Inf
+	while(abs(diff_i) > tol & counter <= maxiter) {
+
+		#run knapsack_compare
+		params_eval <- eval(params)
+		comp_results <- knapsack_compare(dists = dists, params = params_eval, store = TRUE, summary = FALSE)
+		results[counter, 2:(1+length(comp_results))] <- comp_results
+		diff <- results[counter, 2] - results[counter, 3]
+		results[counter, ncol(results)] <- diff
+		results[counter, 1] <- i
+
+		# update i
+		if(sign_flip == 1) {
+			if(diff > 0) {
+				maxpos <- i
+				i <- (i + minneg) / 2
+			} else {
+				minneg <- i
+				i <- (i + maxpos) / 2
+			}
+		}
+
+		if(sign_flip == 0) {
+			if(diff > 0) {
+				maxpos <- i
+				i <- i + inc
+			}
+			else {
+				minneg <- i
+				sign_flip <- 1
+				i <- (maxpos + minneg) / 2
+			}
+		}
+
+		diff_i <- i - results[counter, 1]
+		counter <- counter + 1
+	}
+	return(results[which.min(abs(results[, ncol(results)])), ])
+	#return(na.omit(results)[nrow(na.omit(results)), ])
+}
+
+#compare(dists = list('Uniform', 'Uniform', 'Uniform'), params = quote(list(c(min = -0.5, max = 1.5), c(min = -i, max = i), c(min = -1,  max = 1))), summary = FALSE, store = TRUE)
+

@@ -1,0 +1,536 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+theorems-ams-bytype
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize default
+\spacing onehalf
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\pdf_quoted_options "urlcolor=blue"
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Adversarial Knapsacks
+\end_layout
+
+\begin_layout Author
+Morad Elsaify, Ben Ewing, Usa Kerdnunvong, Neil Pruthi
+\end_layout
+
+\begin_layout Date
+December 11, 2018
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Subsection
+Premise of the Game
+\end_layout
+
+\begin_layout Subsection
+Applications
+\end_layout
+
+\begin_layout Section
+Two Player Variance Independence
+\end_layout
+
+\begin_layout Standard
+First, we consider the simplest specification of this problem.
+ Let there be 2 players and 2 items.
+ Denote the two items 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+, and further assume that the items have identical means 
+\begin_inset Formula $\mathbb{E}\left[X_{1}\right]=\mathbb{E}\left[X_{2}\right]=\mu$
+\end_inset
+
+ and symmetric distributions.
+\end_layout
+
+\begin_layout Definition
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[Symmetric Distributions]
+\end_layout
+
+\end_inset
+
+Let a probability distribution be symmetric if there exists a value 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ such that its probability density function 
+\begin_inset Formula $f\left(\cdot\right)$
+\end_inset
+
+ exhibits the following property:
+\begin_inset Formula 
+\[
+f\left(x_{0}-\delta\right)=f\left(x_{0}+\delta\right)\ \forall\delta\in\mathbb{R}
+\]
+
+\end_inset
+
+Further, the median and mean of a symmetric distribution are both equal
+ to 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+.
+ All symmetric distributions have no skewness.
+\end_layout
+
+\begin_layout Standard
+Symmetric distributions provide a good starting point for this analysis,
+ as it abstracts away from skewness and include the most common distributions
+ used in academic research (uniform, normal, Student's 
+\begin_inset Formula $t$
+\end_inset
+
+, etc.) Focusing on these distributions lets us analyze the importance of
+ variance (and all even moments) on each player's decision processes.
+ The tractability resulting from assuming 2 players gives our first important
+ result.
+\end_layout
+
+\begin_layout Theorem
+Let 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ be two continuous, independent random variables with symmetric probability
+ density functions 
+\begin_inset Formula $f_{1}\left(\cdot\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}\left(\cdot\right)$
+\end_inset
+
+ and expectation 
+\begin_inset Formula $\mathbb{E}\left[X_{1}\right]=\mathbb{E}\left[X_{2}\right]=\mu$
+\end_inset
+
+.
+ Then, 
+\begin_inset Formula $\mathbb{P}\left(X_{1}>X_{2}\right)=\mathbb{P}\left(X_{2}>X_{1}\right)=\nicefrac{1}{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+WLOG, let 
+\begin_inset Formula $\mu=0$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $f_{1-2}\left(\cdot\right)$
+\end_inset
+
+ denote the probability density function of 
+\begin_inset Formula $X_{1}-X_{2}$
+\end_inset
+
+.
+ 
+\begin_inset Formula $f_{1-2}\left(\cdot\right)$
+\end_inset
+
+ is given by 
+\begin_inset Formula 
+\[
+f_{1-2}\left(z\right)=\int_{-\infty}^{\infty}f_{1}\left(z+x\right)f_{2}\left(x\right)dz.
+\]
+
+\end_inset
+
+Now, I assert that 
+\begin_inset Formula $f_{1-2}\left(\cdot\right)$
+\end_inset
+
+ is symmetric about zero.
+ To see this, use symmetry of 
+\begin_inset Formula $f_{1}\left(\cdot\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}\left(\cdot\right)$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+f_{1-2}\left(z\right)=\int_{-\infty}^{\infty}f_{1}\left(-z-x\right)f_{2}\left(-x\right)dz
+\]
+
+\end_inset
+
+Let 
+\begin_inset Formula $y=-x$
+\end_inset
+
+.
+ Substituting this, we have
+\begin_inset Formula 
+\[
+f_{1-2}\left(z\right)=\int_{-\infty}^{\infty}f_{1}\left(-z+y\right)f_{2}\left(y\right)dy.
+\]
+
+\end_inset
+
+This is simply equal to 
+\begin_inset Formula $f_{1-2}\left(-z\right)$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $f_{1-2}\left(z\right)=f_{1-2}\left(-z\right)\ \forall z$
+\end_inset
+
+, so 
+\begin_inset Formula $f_{1-2}$
+\end_inset
+
+ is symmetric about zero.
+ The mass above and below zero must be equal.
+ As a result, we have:
+\begin_inset Formula 
+\[
+\mathbb{P}\left(X_{1}>X_{2}\right)=\int_{0}^{\infty}f_{1-2}\left(x\right)dx=\nicefrac{1}{2}
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\[
+\mathbb{P}\left(X_{2}>X_{1}\right)=\int_{-\infty}^{0}f_{1-2}\left(x\right)dx=\nicefrac{1}{2},
+\]
+
+\end_inset
+
+which proves our result
+\end_layout
+
+\begin_layout Corollary
+Let 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ be two discrete, independent random variables with symmetric probability
+ distribution functions 
+\begin_inset Formula $f_{1}\left(\cdot\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}\left(\cdot\right)$
+\end_inset
+
+ and expectation 
+\begin_inset Formula $\mathbb{E}\left[X_{1}\right]=\mathbb{E}\left[X_{2}\right]=\mu$
+\end_inset
+
+.
+ Then, 
+\begin_inset Formula $\mathbb{P}\left(X_{1}>X_{2}\right)=\mathbb{P}\left(X_{2}>X_{1}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Theorem 1 does not perfectly correspond to Corollary 1 due to the possibility
+ of ties in discrete random variables.
+ As a result, while the probability of 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ exceeding 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ is equal to the probability of 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ exceeding 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+, these probabilities do not necessarily equal 
+\begin_inset Formula $\nicefrac{1}{2}$
+\end_inset
+
+ due to the fact that the probability of ties is not necessarily zero.
+\end_layout
+
+\begin_layout Standard
+Theorem 1 and Corollary 1 provide a powerful result for this baseline setup.
+ The only relevant statistic for examining the setup described above is
+ expected value.
+ With two players, and two items with symmetric distributions, both players
+ always prefer the item with the higher expected value.
+ If both items have the same expected value, then both players are indifferent
+ between the two items.
+\end_layout
+
+\begin_layout Lemma
+Let 
+\begin_inset Formula $X_{1},\dots,X_{n}$
+\end_inset
+
+ be symmetric random variables with means 
+\begin_inset Formula $\mu_{1},\dots,\mu_{n}$
+\end_inset
+
+.
+ Then, 
+\begin_inset Formula $X=\sum_{i=1}^{n}X_{i}$
+\end_inset
+
+ is symmetric with mean 
+\begin_inset Formula $\mu=\sum_{i=1}^{n}\mu_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+In the proof of Theorem 1, set 
+\begin_inset Formula $X_{2}=-X_{i}$
+\end_inset
+
+ for any 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ (Note that if 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+ is symmetric, then so too is 
+\begin_inset Formula $-X_{i}$
+\end_inset
+
+.) The random variable 
+\begin_inset Formula $X_{1}-X_{2}=X_{1}+X_{i}$
+\end_inset
+
+ is therefore symmetric and has mean 
+\begin_inset Formula $\mu_{1}+\mu_{i}$
+\end_inset
+
+.
+ Repeat this process for all 
+\begin_inset Formula $i=2,\dots,n$
+\end_inset
+
+ to obtain the result.
+\end_layout
+
+\begin_layout Standard
+Lemma 1 can be used to further generalize this result in which there are
+ 
+\begin_inset Formula $m$
+\end_inset
+
+ items with symmetric distributions but potentially different means.
+ For any allocation of the 
+\begin_inset Formula $m$
+\end_inset
+
+ items such that the knapsacks of both players have the same mean, higher
+ moments do not affect the probability of winning.
+\end_layout
+
+\begin_layout Theorem
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[Two-Player Variance Independence]
+\end_layout
+
+\end_inset
+
+ Let 
+\begin_inset Formula $X_{1},\dots,X_{m}$
+\end_inset
+
+ be independent random variables with symmetric probability distributions
+ and means 
+\begin_inset Formula $\mu_{1},\dots,\mu_{m}$
+\end_inset
+
+.
+ For any two knapsacks given by the set of indices 
+\begin_inset Formula $K_{1},K_{2}\subseteq\left\{ 1,\dots,m\right\} $
+\end_inset
+
+ such that 
+\begin_inset Formula $\sum_{i\in K_{1}}\mu_{i}=\sum_{i\in K_{2}}\mu_{i}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\mathbb{P}\left(\sum_{i\in K_{1}}X_{i}>\sum_{i\in K_{2}}X_{i}\right)=\mathbb{P}\left(\sum_{i\in K_{2}}X_{i}>\sum_{i\in K_{1}}X_{i}\right).
+\]
+
+\end_inset
+
+In other words, any two combinations of symmetric random variables with
+ the same mean have the same probability of exceeding the other.
+\end_layout
+
+\begin_layout Proof
+Combine Lemma 1 with Theorem 1.
+\end_layout
+
+\begin_layout Standard
+The theory in this section provides several directions to consider.
+ The first is the potential importance of variance in settings in which
+ there are more than 2 players.
+ This gives rise to a 
+\begin_inset Quotes eld
+\end_inset
+
+Mean-Variance Tradeoff,
+\begin_inset Quotes erd
+\end_inset
+
+ which we discuss in the next section.
+ Second, we can generate useful insights on the importance of skew using
+ asymmetric distributions, which we discuss in Section 4.
+\end_layout
+
+\begin_layout Section
+Mean-Variance Tradeoff
+\end_layout
+
+\begin_layout Standard
+*mention how skewed distributions don't have a mean-variance tradeoff (almost
+ always prefer mean) gamma distribution*
+\end_layout
+
+\begin_layout Section
+Skew and Higher Moments
+\end_layout
+
+\begin_layout Section
+Cycles
+\end_layout
+
+\begin_layout Section
+Minimax and Mixtures
+\end_layout
+
+\begin_layout Section
+Conclusions and Future Work
+\end_layout
+
+\end_body
+\end_document
