@@ -52,7 +52,7 @@ mtext('5 Players', side = 3, line = 0, at = 0.5, col = 'black')
 plot(mv_uniform[1:n, 1], (mv_uniform[1:n, 5]^2)/3, type = 'line', ylim = c(0, 90), xlab = '', ylab = '')
 lines(mv_normal[1:n, 1], mv_normal[1:n, 5]^2, col = 'red')
 mtext('10 Players', side = 3, line = 0, at = 0.5, col = 'black')
-title(xlab = 'Excess Mean', ylab = 'Excess Variance', outer = TRUE, line = 3, cex.lab = 1.5)
+title(xlab = 'Excess Mean', ylab = 'Excess Variance', outer = TRUE, line = 3, cex.lab = 1.25)
 dev.off()
 
 ##########
@@ -86,7 +86,7 @@ dev.off()
 
 ### set sequence of mean values, number of players, distributions
 mean_seq <- c(0.5, 1)
-players <- 3:20
+players <- 3:22
 
 ### create matrices
 mv_uniform_players <- matrix(NA, length(players), length(mean_seq))
@@ -99,10 +99,20 @@ colnames(mv_normal_players) <- paste0('Mean ', mean_seq)
 ### compute indifferences for each mean, number of players
 for(p in 1:length(players)) {
 	for(j in 1:length(mean_seq)) {
-		print(paste0(mean_seq[j], ' ', p))
+		print(paste0(mean_seq[j], ' ', players[p]))
 		params_uniform <- quote(c(list(c(min = -1 + mean_seq[j], max = 1 + mean_seq[j]), c(min = -i, max = i)), list(c(min = -1, max = 1))[rep(1, players[p]-2)]))
 		params_normal <- quote(c(list(c(mean = mean_seq[j], sd = 1), c(mean = 0, sd = i)), list(c(mean = 0, sd = 1))[rep(1, players[p]-2)]))
 		mv_uniform_players[p, j] <- compare(dists = list('Uniform')[rep(1,players[p])], params = params_uniform)[1]
 		mv_normal_players[p, j] <- compare(dists = list('Normal')[rep(1,players[p])], params = params_normal)[1]
 	}
 }
+
+### plot
+setEPS()
+postscript('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/mv_players.eps', width = 10.5, height = 8)
+plot(players - 2, 0.5/((mv_uniform_players[, 1]^2)/3), type = 'line', ylim = c(0, 0.5), xlab = 'Number of Baseline Players', ylab = 'Excess Mean/Variance', cex.lab = 1.25)
+lines(players - 2, 1/((mv_uniform_players[, 2]^2)/3), col = 'black', lty = 5)
+lines(players - 2, 0.5/(mv_normal_players[, 1]), col = 'red', lty = 1)
+lines(players - 2, 1/(mv_normal_players[, 2]), col = 'red', lty = 5)
+legend(x = 'topleft', legend = c('Uniform, Mean 0.5', 'Uniform, Mean 1', 'Normal, Mean 0.5', 'Normal, Mean 1'), col = c('black', 'black', 'red', 'red'), lty = c(1, 5, 1, 5))
+dev.off()
