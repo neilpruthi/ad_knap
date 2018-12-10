@@ -80,3 +80,29 @@ dev.off()
 # 	}
 # }
 
+# ##########
+
+##### STEP 3: SYMMETRIC DISTRIBUTIONS, VARIABLE NUMBER OF PLAYERS, FIXED MEAN #####
+
+### set sequence of mean values, number of players, distributions
+mean_seq <- c(0.5, 1)
+players <- 3:20
+
+### create matrices
+mv_uniform_players <- matrix(NA, length(players), length(mean_seq))
+rownames(mv_uniform_players) <- paste0(players, '-players')
+colnames(mv_uniform_players) <- paste0('Mean ', mean_seq)
+mv_normal_players <- matrix(NA, length(players), length(mean_seq))
+rownames(mv_normal_players) <- paste0(players, '-players')
+colnames(mv_normal_players) <- paste0('Mean ', mean_seq)
+
+### compute indifferences for each mean, number of players
+for(p in 1:length(players)) {
+	for(j in 1:length(mean_seq)) {
+		print(paste0(mean_seq[j], ' ', p))
+		params_uniform <- quote(c(list(c(min = -1 + mean_seq[j], max = 1 + mean_seq[j]), c(min = -i, max = i)), list(c(min = -1, max = 1))[rep(1, players[p]-2)]))
+		params_normal <- quote(c(list(c(mean = mean_seq[j], sd = 1), c(mean = 0, sd = i)), list(c(mean = 0, sd = 1))[rep(1, players[p]-2)]))
+		mv_uniform_players[p, j] <- compare(dists = list('Uniform')[rep(1,players[p])], params = params_uniform)[1]
+		mv_normal_players[p, j] <- compare(dists = list('Normal')[rep(1,players[p])], params = params_normal)[1]
+	}
+}
