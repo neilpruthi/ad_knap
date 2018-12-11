@@ -119,6 +119,19 @@ items <- cbind(runif(n_draws, -1, 1), runif(n_draws, 0, 3),
 # Estimate utility
 items_u <- est_knap_u(items, n_players)
 
+# And run minimax
+mini <- minimax(list2env(items_u), n_players)
+mini$solution
+
+# Minimax components
+mini_comp <- paste0("V", which(mini$solution[-length(mini$solution)] > 0))
+
+# minimax probabilities
+mini_pr <- data_frame(
+  pr = mini$solution[-length(mini$solution)],
+  var = paste0("V", 1:(length(mini$solution)-1))
+)
+
 # Plot density of each item with estimated utility
 items %>%
   as_data_frame() %>% 
@@ -133,8 +146,10 @@ items %>%
       var == "V6" ~ mean(unlist(items_u)[grepl("^5", names(items_u))])
     ), avg_est_utility = round(avg_est_utility, digits = 4)
   ) %>% 
+  left_join(mini_pr, by = "var")
   group_by(var) %>% 
-  mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility))) %>% 
+  mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility), 
+                      "; Minimax Probability: ", round(unique(pr), digits = 4))) %>% 
   ggplot(aes(val, colour = var, fill = var)) +
   geom_density(alpha = 0.10) +
   scale_fill_viridis_d() +
