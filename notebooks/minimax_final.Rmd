@@ -41,10 +41,114 @@ source_python("../py/estimate_utility.py")
 np <- import("numpy", convert=FALSE)
 ```
 
+# Utility plots
+
+Homogeneous mean and variance.
+```{r utility-plot-1}
+n_players <- as.integer(2)
+n_draws <- 100000
+n_items <- 2
+
+# Generate items
+items <- cbind(runif(n_draws, -1, 1), runif(n_draws, -1, 1))
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# Plot density of each item with estimated utility
+items %>%
+  as_data_frame() %>% 
+  gather(var, val) %>% 
+  mutate(
+    avg_est_utility = case_when(var == "V1" ~ mean(items_u$`0;0`, items_u$`0;1`),
+                                var == "V2" ~ mean(items_u$`1;0`, items_u$`1;1`))
+  ) %>% 
+  group_by(var) %>% 
+  mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility))) %>% 
+  ggplot(aes(val, colour = var, fill = var)) +
+  geom_density(alpha = 0.10) +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
+  facet_wrap(. ~ lab, ncol = 1) +
+  theme(legend.position = "none", axis.title = element_blank())
+ggsave("../plots/final/utility_case_1.png", width = 16, height = 12)
+```
+
+Homogeneous mean and variance.
+```{r utility-plot-1}
+n_players <- as.integer(2)
+n_draws <- 100000
+n_items <- 2
+
+# Generate items
+items <- cbind(runif(n_draws, -1, 1), runif(n_draws, -3, 3))
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# Plot density of each item with estimated utility
+items %>%
+  as_data_frame() %>% 
+  gather(var, val) %>% 
+  mutate(
+    avg_est_utility = case_when(var == "V1" ~ mean(items_u$`0;0`, items_u$`0;1`),
+                                var == "V2" ~ mean(items_u$`1;0`, items_u$`1;1`))
+  ) %>% 
+  group_by(var) %>% 
+  mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility))) %>% 
+  ggplot(aes(val, colour = var, fill = var)) +
+  geom_density(alpha = 0.10) +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
+  facet_wrap(. ~ lab, ncol = 1) +
+  theme(legend.position = "none", axis.title = element_blank())
+ggsave("../plots/final/utility_case_2.png", width = 16, height = 12)
+```
+
+All different mean and variance.
+```{r utility-plot-1}
+n_players <- as.integer(3)
+n_draws <- 10000
+n_items <- 6
+
+# Generate items
+items <- cbind(runif(n_draws, -1, 1), runif(n_draws, 0, 3),
+               runif(n_draws, -2, 1), runif(n_draws, 0.80, 3.9),
+               runif(n_draws, 3, 5), runif(n_draws, -1, 5.5))
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# Plot density of each item with estimated utility
+items %>%
+  as_data_frame() %>% 
+  gather(var, val) %>% 
+  mutate(
+    avg_est_utility = case_when(
+      var == "V1" ~ mean(unlist(items_u)[grepl("^0", names(items_u))]),
+      var == "V2" ~ mean(unlist(items_u)[grepl("^1", names(items_u))]),
+      var == "V3" ~ mean(unlist(items_u)[grepl("^2", names(items_u))]),
+      var == "V4" ~ mean(unlist(items_u)[grepl("^3", names(items_u))]),
+      var == "V5" ~ mean(unlist(items_u)[grepl("^4", names(items_u))]),
+      var == "V6" ~ mean(unlist(items_u)[grepl("^5", names(items_u))])
+    ), avg_est_utility = round(avg_est_utility, digits = 4)
+  ) %>% 
+  group_by(var) %>% 
+  mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility))) %>% 
+  ggplot(aes(val, colour = var, fill = var)) +
+  geom_density(alpha = 0.10) +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
+  facet_wrap(. ~ lab, ncol = 1) +
+  theme(legend.position = "none", axis.title = element_blank())
+ggsave("../plots/final/utility_case_3.png", width = 16, height = 12)
+```
+
+
 # Equal Means
 
 Three players.
-```{r uniform-items-2-3, warning = FALSE, cache = TRUE}
+```{r uniform-items-2-3git , warning = FALSE, cache = TRUE}
 n_players <- as.integer(3)
 n_draws <- 1000
 n_items <- 12
@@ -197,7 +301,7 @@ n_items <- 20
 items <- np_array(sapply(seq(1, 10, length.out = n_items), function(x) {
   aug <- runif(1, 0, 5)
   sample(seq(-x + aug, x + aug, length.out = n_draws))
-  }))
+}))
 
 # A density plot
 # items %>%
