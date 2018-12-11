@@ -118,7 +118,7 @@ Introduction
 
 \begin_layout Standard
 We consider a game in which each agent faces a knapsack problem.
- The price of each item is known, but the value is a 
+ Each item's price is known, but each item's value is a 
 \emph on
 random variable
 \emph default
@@ -154,7 +154,7 @@ More formally, each player,
 \begin_inset Formula $j\in M$
 \end_inset
 
-, has price 
+, has some price 
 \begin_inset Formula $p_{j},$
 \end_inset
 
@@ -167,20 +167,20 @@ and draws value from a known distribution
 \begin_inset Formula $i$
 \end_inset
 
- wins if either (1) the value of her knapsack is weakly greater than the
- value of agent 
+ wins if (1) the value of her knapsack is weakly greater than the value
+ of agent 
 \begin_inset Formula $j$
 \end_inset
 
-, for all 
+'s knapsack, for all 
 \begin_inset Formula $j\neq i$
 \end_inset
 
-, or (2) there exists an agent 
+, and (2) there exists an agent 
 \begin_inset Formula $j$
 \end_inset
 
- such that the vlaue of agent 
+ such that the value of agent 
 \begin_inset Formula $j's$
 \end_inset
 
@@ -189,27 +189,31 @@ and draws value from a known distribution
 \end_inset
 
  knapsack.
- The player whose knapsack takes on the highest value receives a utility
- of 
+ If one agent wins, she receives utility of 
 \begin_inset Formula $n-1$
 \end_inset
 
-, and each loser pays -1.
- In the case where multiple players (say 
+.
+ All agents who lose pay 
+\begin_inset Formula $-1$
+\end_inset
+
+.
+ If multiple agents (say 
 \begin_inset Formula $n_{w})$
 \end_inset
 
- tie and win (a 
+ tie to win (a 
 \emph on
 split win
 \emph default
-), each winning player receives 
+), each winning agent receives 
 \begin_inset Formula $\frac{{n-n_{w}}}{n_{w}}$
 \end_inset
 
 .
- If all players tie, they all receive 0.
- We consider variations where players choose items sequentially or simultaneousl
+ If all agents tie, each receives 0.
+ We consider variations where players choose items simultaneously or sequentiall
 y.
 \end_layout
 
@@ -873,7 +877,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Affect of Variance in Uniform Distributions
+Effect of Variance in Uniform Distributions
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:1"
@@ -893,10 +897,6 @@ name "fig:1"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -1500,6 +1500,106 @@ For discrete distributions, the issue was one of computational imperfection.
  in a given mean.
  Solving for an indifference between mean and variance (which requires iterating
  over various parametrizations until convergence) is infeasible as a result.
+\end_layout
+
+\begin_layout Section
+Three cases
+\end_layout
+
+\begin_layout Subsection
+Case 1
+\end_layout
+
+\begin_layout Standard
+Suppose we have 
+\begin_inset Formula $n=2$
+\end_inset
+
+, 
+\begin_inset Formula $m=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{i}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i\in N$
+\end_inset
+
+, and 
+\begin_inset Formula $p_{j}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $j\in M$
+\end_inset
+
+.
+ Suppose the expected values and the variances of each item's value are
+ equal.
+ In this simple case, an agent's best strategy is to mix over each item
+ with probabity 
+\begin_inset Formula $1/2$
+\end_inset
+
+.
+ This is similar to 
+\emph on
+matching pennies
+\emph default
+, though here both agents want to 
+\emph on
+avoid
+\emph default
+ matching.
+\end_layout
+
+\begin_layout Subsection
+Case 2
+\end_layout
+
+\begin_layout Standard
+As before, suppose that we have 
+\begin_inset Formula $n=2$
+\end_inset
+
+, 
+\begin_inset Formula $m=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{i}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i\in N$
+\end_inset
+
+, 
+\begin_inset Formula $p_{j}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $j\in M$
+\end_inset
+
+, and that the expected values of each item's value are equal.
+ But now let's allow for item value variances to be heterogeneous.
+ Does an agent's best strategy change here? No.
+ We know from 
+\emph on
+Two Player Variance Independence
+\emph default
+ that variance shouldn't matter here.
+\end_layout
+
+\begin_layout Subsection
+Case 3
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Section
@@ -3180,7 +3280,7 @@ As an extension to our previous simulations, we also consider simulated
 \end_layout
 
 \begin_layout Subsection
-Utiltiy Estimation
+Utility Estimation
 \end_layout
 
 \begin_layout Standard
@@ -3595,10 +3695,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3647,15 +3743,17 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
-\end_layout
+\begin_inset Graphics
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/uniform_dists_het_mean.png
+	scale 50
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
 

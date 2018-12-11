@@ -93,7 +93,7 @@ Introduction
 
 \begin_layout Standard
 We consider a game in which each agent faces a knapsack problem.
- The price of each item is known, but the value is a 
+ Each item's price is known, but each item's value is a 
 \emph on
 random variable
 \emph default
@@ -129,7 +129,7 @@ More formally, each player,
 \begin_inset Formula $j\in M$
 \end_inset
 
-, has price 
+, has some price 
 \begin_inset Formula $p_{j},$
 \end_inset
 
@@ -198,6 +198,7 @@ This game can be used to model a wide variety of competitive and resource
  In particular, this game is a generalization of fantasy sports, where players
  form a team (knapsack) with the goal of choosing players (items) who will
  score the highest number of points.
+ 
 \end_layout
 
 \end_body
