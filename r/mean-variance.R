@@ -24,7 +24,7 @@ for(i in 1:100) {
 ### make plot
 setEPS()
 postscript('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/uniform_dists.eps')
-plot(1:100, probs[, 1], type = 'line', col = 'red', ylim = c(25, 50), xlab = 'a', ylab = 'Probability of Winning (%)', cex.lab = 1.55)
+plot(1:100, probs[, 1], type = 'line', col = 'red', ylim = c(25, 50), xlab = 'a', ylab = 'Probability of Winning (%)', cex.lab = 1.5)
 lines(1:100, probs[, 2], type = 'line', col = 'blue')
 lines(1:100, probs[, 3], type = 'line', col = 'black')
 box(which = 'plot', lty = 'solid')
@@ -143,3 +143,23 @@ lines(c(0, players - 2), c(0, 0.5/((mv_normal_players[, 1]) - 1)), col = 'red', 
 lines(c(0, players - 2), c(0, 1/((mv_normal_players[, 2]) - 1)), col = 'red', lty = 5)
 legend(x = 'topleft', legend = c('Uniform, x = 0.5', 'Uniform, x = 1', 'Normal, x = 0.5', 'Normal, x = 1'), col = c('black', 'black', 'red', 'red'), lty = c(1, 5, 1, 5))
 dev.off()
+
+##### STEP 5: PLOT GAMMA VS. NORMAL DISTRIBUTION #####
+
+### make plot of gamma vs. normal
+setEPS()
+postscript('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/skewness.eps')
+par(mar = c(5, 6, 2, 2) + 0.1)
+plot(density(rgamma(10000000, shape = 1, scale = 2)), xlim = c(-10, 20), xlab = 'Value', main = '', cex.lab = 1.5)
+lines(density(rnorm(10000000, mean = 2, sd = sqrt(2))), col = 'blue')
+legend(x = 'topright', legend = c('Mean = 2', 'Variance = 2'))
+dev.off()
+
+### performance of gamma vs. normal
+knapsack_compare(dists = list('Gamma', 'Normal'), params = list(c(shape = 1, scale = 2), c(mean = 2, sd = sqrt(2))), iters = 100000)
+
+##### SAVE DATA #####
+write.csv(mv_uniform[1:20, ], file = '~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/data/mean_variance_uniform.csv')
+write.csv(mv_normal[1:20, ], file = '~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/data/mean_variance_normal.csv')
+write.csv(mv_uniform_players, file = '~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/data/mean_variance_uniform_n.csv')
+write.csv(mv_normal_players, file = '~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/data/mean_variance_normal_n.csv')

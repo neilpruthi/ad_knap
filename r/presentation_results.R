@@ -28,3 +28,5 @@ dev.off()
 
 ### performance of gamma vs. normal
 knapsack_compare(dists = list('Gamma', 'Normal'), params = list(c(shape = 1, scale = 2), c(mean = 2, sd = sqrt(2))))
+
+##### SAVE DATA #####
