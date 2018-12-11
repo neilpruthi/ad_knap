@@ -71,7 +71,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_1.png", width = 12, height = 8)
+ggsave("../plots/final/utility_case_1.png", width = 4, height = 3)
 ```
 
 Homogeneous mean and variance.
@@ -102,7 +102,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_2.png", width = 12, height = 8)
+ggsave("../plots/final/utility_case_2.png", width = 4, height = 3)
 ```
 
 All different mean and variance.
@@ -156,7 +156,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_3.png", width = 12, height = 8)
+ggsave("../plots/final/utility_case_3.png", width = 4, height = 3)
 ```
 
 
