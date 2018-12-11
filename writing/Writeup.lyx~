@@ -3568,8 +3568,9 @@ Once utility has been estimated for a given number of players and items,
  mixture distribution.
  Our implementation of minimax uses the linear programming approach presented
  in lecture.
- We consider four cases which we hope will provide some intuition about
- what minimax strategies look like.
+ We consider four cases, where players choose knapsacks simultaneously,
+ which we hope will provide some intuition about what minimax strategies
+ look like.
 \end_layout
 
 \begin_layout Subsubsection
