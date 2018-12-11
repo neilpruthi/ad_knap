@@ -873,7 +873,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Affect of Variance in Uniform Distributions
+Effect of Variance in Uniform Distributions
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:1"
@@ -3658,10 +3658,6 @@ status open
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
