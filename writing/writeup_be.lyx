@@ -1,0 +1,205 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Adversarial Knapsacks
+\end_layout
+
+\begin_layout Author
+Morad Elsaify, Ben Ewing, Usa Kerdnunvong, Neil Pruthi
+\end_layout
+
+\begin_layout Date
+December 11, 2018
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+We consider a game in which each agent faces a knapsack problem.
+ The price of each item is known, but the value is a 
+\emph on
+random variable
+\emph default
+ with a known distribution.
+ The realized value is only revealed after all players have formed their
+ knapsacks.
+ We might imagine, for example, a number of agents preparing to survive
+ an unknown stretch of wilderness.
+ If a given agent chooses
+\emph on
+ bearspray
+\emph default
+ for her knapsack, and then goes out into a world in which there are many
+ bears, then the bearspray takes on a high value.
+ 
+\end_layout
+
+\begin_layout Subsection
+Premise of the Game
+\end_layout
+
+\begin_layout Standard
+More formally, each player, 
+\begin_inset Formula $i\in N$
+\end_inset
+
+ , has some budget 
+\begin_inset Formula $b_{i}$
+\end_inset
+
+, with which to buy items for their knapsacks.
+ Each item 
+\begin_inset Formula $j\in M$
+\end_inset
+
+, has price 
+\begin_inset Formula $p_{j},$
+\end_inset
+
+and draws value from a known distribution 
+\begin_inset Formula $f_{j}$
+\end_inset
+
+.
+ We say that a given agent 
+\begin_inset Formula $i$
+\end_inset
+
+ wins if either (1) the value of her knapsack is weakly greater than the
+ value of agent 
+\begin_inset Formula $j$
+\end_inset
+
+, for all 
+\begin_inset Formula $j\neq i$
+\end_inset
+
+, or (2) there exists an agent 
+\begin_inset Formula $j$
+\end_inset
+
+ such that the vlaue of agent 
+\begin_inset Formula $j's$
+\end_inset
+
+ knapsack is strictly less than the value of 
+\begin_inset Formula $i's$
+\end_inset
+
+ knapsack.
+ The player whose knapsack takes on the highest value receives a utility
+ of 
+\begin_inset Formula $n-1$
+\end_inset
+
+, and each loser pays -1.
+ In the case where multiple players (say 
+\begin_inset Formula $n_{w})$
+\end_inset
+
+ tie and win (a 
+\emph on
+split win
+\emph default
+), each winning player receives 
+\begin_inset Formula $\frac{{n-n_{w}}}{n_{w}}$
+\end_inset
+
+.
+ If all players tie, they all receive 0.
+ We consider variations where players choose items sequentially or simultaneousl
+y.
+\end_layout
+
+\begin_layout Subsection
+Applications
+\end_layout
+
+\begin_layout Standard
+This game can be used to model a wide variety of competitive and resource
+ constrained settings.
+ In particular, this game is a generalization of fantasy sports, where players
+ form a team (knapsack) with the goal of choosing players (items) who will
+ score the highest number of points.
+ 
+\end_layout
+
+\end_body
+\end_document

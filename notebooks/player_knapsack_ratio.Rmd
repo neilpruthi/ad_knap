@@ -1,0 +1,58 @@
+---
+title: "Player to Knapsack Ratio"
+author: "Ben Ewing"
+date: "November 25, 2018"
+output:
+  pdf_document: default
+header-includes:
+  - \usepackage{amsfonts}
+  - \usepackage{stmaryrd}
+  - \usepackage{bm}
+  - \usepackage{bbm}
+geometry: margin=2cm
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+R.
+
+```{r r-setup, include = F}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(RcppAlgos)
+library(ggplot2)
+```
+
+
+Helper functions.
+```{r heleprs}
+n_ties <- function(n_players, n_knaps) {
+  data_frame(
+    n_players = n_players,
+    n_knaps = n_knaps,
+    player_knap_ratio = n_players/n_knaps,
+    n_matches = n_knaps^n_players,
+    n_complete_ties = n_knaps,
+    n_any_ties = n_matches - (factorial(n_knaps)/factorial(n_knaps-n_players)),
+    n_any_ties_n_matches_ratio = n_any_ties/n_matches
+    # tie_matchup_ratio = n_ties/n_matches
+  )
+}
+```
+
+# Discussion
+
+Recall that if a player ties and wins (a split win), they split their winnings with all tied players. For example, in a game where two players win and one player loses, the winning players each get a utility of 0.5, and the loser -1. Thus, a win is strictly better than a split win, which is strictly better than a loss. 
+
+Observe that if there are $n$ players $m$ items, there are $m^n$ possible matches, of which there are:
+  * $m$ matches where all players play the same item
+    * I can't really figure out the expansion here
+    * i.e. how many matches where $n-1$ players all play the same item (but not the same item as the first player)?
+  * $\frac{m!}{(m-n)!$ matches where all players play a unique item
+
+The maximum achievable utility for the tied players (i.e. in the case where they win) is $0, \frac{1}{n-1}, \frac{2}{n-2}, \ldots, \frac{n}{n-(n-1)}$ (in the first case, all tie, in the last case, only one person wins). 
+
+

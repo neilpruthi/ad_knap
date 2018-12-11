@@ -1,0 +1,191 @@
+---
+title: "Semi Bernoulli Items"
+author: "Ben Ewing and Neil Pruthi"
+date: "December 7, 2018"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+R setup.
+
+```{r r-setup, include = FALSE}
+# For data manipulation
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(e1071)
+# For linear programming
+library(ROI)
+library(ROI.plugin.glpk)
+library(ompr)
+library(ompr.roi)
+# Plotting
+library(ggplot2)
+library(ggthemes)
+theme_set(theme_tufte())
+# Minimax
+source("../r/n_player_minimax.R")
+# Simulation settings
+n_draws <- 1000
+```
+
+Python/reticulate setup.
+
+```{r py-setup}
+library(reticulate)
+use_python("C:/ProgamData/Anaconda3/python.exe")
+# Load utility functions
+source_python("../py/estimate_utility.py")
+# and Numpy
+np <- import("numpy", convert=FALSE)
+```
+
+# Equal Means
+
+```{r uniform-items-2, warning = FALSE, cache = TRUE}
+n_players <- as.integer(4)
+n_draws <- 50
+n_items <- 20
+
+# Generate items
+# items <- sapply(seq(1, 10, length.out = n_items), function(x) runif(n_draws, -x, x))
+items <- np_array(sapply(seq(1, 10, length.out = n_items), function(x) sample(seq(-x, x, length.out = n_draws))))
+
+# A density plot
+# items %>%
+#   as.matrix() %>%
+#   as_tibble() %>%
+#   gather(item, val) %>%
+#   ggplot(aes(val, colour = item, fill = item)) +
+#   geom_density(alpha = 0.10) +
+#   scale_fill_viridis_d() +
+#   scale_colour_viridis_d() +
+#   theme(legend.position = "none", axis.title = element_blank())
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# And run minimax
+mini <- minimax(list2env(items_u), n_players)
+mini$solution
+
+# Minimax components
+mini_comp <- paste0("V", which(mini$solution[-length(mini$solution)] > 0))
+
+# minimax probabilities
+mini_pr <- data_frame(
+  pr = mini$solution[-length(mini$solution)],
+  item = paste0("V", 1:(length(mini$solution)-1))
+)
+
+items <- as.matrix(items)
+# Create a mixture distribution and append to the end of items
+items_aug <- cbind(
+  items,
+  map(1:(length(mini$solution) - 1), ~ {
+    if (mini$solution[.x] > 0)
+      sample(items[,.x], ceiling(n_draws*mini$solution[.x]))
+    else
+      numeric()
+  }) %>% 
+    unlist() %>% 
+    .[1:n_draws]
+)
+
+# To dataframe
+items_aug <- items_aug %>% 
+  as_data_frame() %>% 
+  gather(item, val) %>% 
+  mutate(item = ifelse(item == paste0("V", (ncol(items) + 1)), "Minimax", item),
+         mark = case_when(item == "Minimax" ~ "Minimax",
+                          item %in% mini_comp ~ "Minimax Componenst",
+                          T ~ "Not Used by Minimax"))
+
+# Plot again
+ggplot(items_aug, aes(val, fill = item, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(. ~ mark, ncol = 1) +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
+  theme(legend.position = "none") +
+  theme(axis.ticks = element_blank(), axis.text = element_blank(), axis.title = element_blank())
+ggsave("../plots/final/uniform_dists.png", width = 6, height = 3)
+```
+
+# Different Means
+
+```{r uniform-items-2, warning = FALSE, cache = TRUE}
+n_players <- as.integer(3)
+n_draws <- 50
+n_items <- 20
+
+# Generate items
+# items <- sapply(seq(1, 10, length.out = n_items), function(x) runif(n_draws, -x, x))
+items <- np_array(sapply(seq(1, 10, length.out = n_items), function(x) {
+  aug <- runif(1, 0, 5)
+  sample(seq(-x + aug, x + aug, length.out = n_draws))
+  }))
+
+# A density plot
+# items %>%
+#   as.matrix() %>%
+#   as_tibble() %>%
+#   gather(item, val) %>%
+#   ggplot(aes(val, colour = item, fill = item)) +
+#   geom_density(alpha = 0.10) +
+#   scale_fill_viridis_d() +
+#   scale_colour_viridis_d() +
+#   theme(legend.position = "none", axis.title = element_blank())
+
+# Estimate utility
+items_u <- est_knap_u(items, n_players)
+
+# And run minimax
+mini <- minimax(list2env(items_u), n_players)
+mini$solution
+
+# Minimax components
+mini_comp <- paste0("V", which(mini$solution[-length(mini$solution)] > 0))
+
+# minimax probabilities
+mini_pr <- data_frame(
+  pr = mini$solution[-length(mini$solution)],
+  item = paste0("V", 1:(length(mini$solution)-1))
+)
+
+items <- as.matrix(items)
+# Create a mixture distribution and append to the end of items
+items_aug <- cbind(
+  items,
+  map(1:(length(mini$solution) - 1), ~ {
+    if (mini$solution[.x] > 0)
+      sample(items[,.x], ceiling(n_draws*mini$solution[.x]))
+    else
+      numeric()
+  }) %>% 
+    unlist() %>% 
+    .[1:n_draws]
+)
+
+# To dataframe
+items_aug <- items_aug %>% 
+  as_data_frame() %>% 
+  gather(item, val) %>% 
+  mutate(item = ifelse(item == paste0("V", (ncol(items) + 1)), "Minimax", item),
+         mark = case_when(item == "Minimax" ~ "Minimax",
+                          item %in% mini_comp ~ "Minimax Componenst",
+                          T ~ "Not Used by Minimax"))
+
+# Plot again
+ggplot(items_aug, aes(val, fill = item, colour = item)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(. ~ mark, ncol = 1) +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
+  theme(legend.position = "none") +
+  theme(axis.ticks = element_blank(), axis.text = element_blank(), axis.title = element_blank())
+ggsave("../plots/final/uniform_dists_het_mean.png", width = 6, height = 3)
+```
