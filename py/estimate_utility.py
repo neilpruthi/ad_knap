@@ -1,6 +1,6 @@
 import numpy as np
 import itertools as it
-# from joblib import Parallel, delayed
+from joblib import Parallel, delayed
 from collections import ChainMap
 
 def match_results(match):
@@ -35,5 +35,5 @@ def est_knap_u(item_draws, n_players, parallel = False):
 
 # Ex
 # test = np.array([[1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4], [1,2,3,4]])
-# testu = est_knap_u(test, 2, parallel = False)
+# testu = est_knap_u(test, 20, parallel = True)
 # print(testu)
