@@ -5,6 +5,11 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\providecommand{\thmautorefname}{Theorem}
+\providecommand{\corautorefname}{Corollary}
+\providecommand{\lemautorefname}{Lemma}
+\end_preamble
 \use_default_options true
 \begin_modules
 theorems-ams-bytype
@@ -113,7 +118,7 @@ Introduction
 
 \begin_layout Standard
 Suppose we have a game in which each agent faces a knapsack problem.
- Each agent chooses items to place in her knapsack, and them goes out into
+ Each agent chooses items to place in her knapsack, and then goes out into
  the world.
  The value of each item is a 
 \emph on
@@ -140,6 +145,13 @@ Applications
 
 \begin_layout Section
 Two Player Variance Independence
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:2"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -210,6 +222,12 @@ Symmetric distributions provide a good starting point for this analysis,
 \end_layout
 
 \begin_layout Theorem
+\begin_inset CommandInset label
+LatexCommand label
+name "thm:1"
+
+\end_inset
+
 Let 
 \begin_inset Formula $X_{1}$
 \end_inset
@@ -335,6 +353,12 @@ which proves our result
 \end_layout
 
 \begin_layout Corollary
+\begin_inset CommandInset label
+LatexCommand label
+name "cor:1"
+
+\end_inset
+
 Let 
 \begin_inset Formula $X_{1}$
 \end_inset
@@ -365,8 +389,32 @@ Let
 \end_layout
 
 \begin_layout Standard
-Theorem 1 does not perfectly correspond to Corollary 1 due to the possibility
- of ties in discrete random variables.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{thm:1}
+\end_layout
+
+\end_inset
+
+ does not perfectly correspond to 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{cor:1}
+\end_layout
+
+\end_inset
+
+ due to the possibility of ties in discrete random variables.
  As a result, while the probability of 
 \begin_inset Formula $X_{1}$
 \end_inset
@@ -391,7 +439,32 @@ Theorem 1 does not perfectly correspond to Corollary 1 due to the possibility
 \end_layout
 
 \begin_layout Standard
-Theorem 1 and Corollary 1 provide a powerful result for this baseline setup.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{thm:1}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{cor:1}
+\end_layout
+
+\end_inset
+
+ provide a powerful result for this baseline setup.
  The only relevant statistic for examining the setup described above is
  expected value.
  With two players, and two items with symmetric distributions, both players
@@ -401,6 +474,12 @@ Theorem 1 and Corollary 1 provide a powerful result for this baseline setup.
 \end_layout
 
 \begin_layout Lemma
+\begin_inset CommandInset label
+LatexCommand label
+name "lem:1"
+
+\end_inset
+
 Let 
 \begin_inset Formula $X_{1},\dots,X_{n}$
 \end_inset
@@ -456,8 +535,19 @@ In the proof of Theorem 1, set
 \end_layout
 
 \begin_layout Standard
-Lemma 1 can be used to further generalize this result in which there are
- 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{lem:1}
+\end_layout
+
+\end_inset
+
+ can be used to further generalize this result in which there are 
 \begin_inset Formula $m$
 \end_inset
 
@@ -512,7 +602,33 @@ In other words, any two combinations of symmetric random variables with
 \end_layout
 
 \begin_layout Proof
-Combine Lemma 1 with Theorem 1.
+Combine 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{lem:1}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+autoref{thm:1}
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -529,7 +645,17 @@ Mean-Variance Tradeoff,
 
  which we discuss in the next section.
  Second, we can generate useful insights on the importance of skew using
- asymmetric distributions, which we discuss in Section 4.
+ asymmetric distributions, which we discuss in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:4"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -537,16 +663,2302 @@ Mean-Variance Tradeoff
 \end_layout
 
 \begin_layout Standard
-*mention how skewed distributions don't have a mean-variance tradeoff (almost
- always prefer mean) gamma distribution*
+In the previous section, we established that in a two player setting in
+ which items are independent and have symmetric distributions, the only
+ relevant statistic is expected value.
+ Players care only about the expected value of the items, and no other propertie
+s of the distribution, including variance.
+ However, the case in which (1) there are more than two players, and (2)
+ items have potentially different means, variance can become an important
+ consideration.
+ 
+\end_layout
+
+\begin_layout Standard
+To see this, consider the following illustrative example.
+ There are three items, 
+\begin_inset Formula $X_{1}\sim U\left[-1,1\right]$
+\end_inset
+
+, 
+\begin_inset Formula $X_{2}\sim U\left[-2,2\right]$
+\end_inset
+
+, and 
+\begin_inset Formula $X_{3}\sim U\left[-100,100\right]$
+\end_inset
+
+.
+ It is clear that 
+\begin_inset Formula $\mathbb{E}\left[X_{1}\right]=\mathbb{E}\left[X_{2}\right]=\mathbb{E}\left[X_{3}\right]=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{V}\left[X_{3}\right]>\mathbb{V}\left[X_{2}\right]>\mathbb{V}\left[X_{1}\right]$
+\end_inset
+
+.
+ The probability that 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ is the largest value is bounded below by:
+\begin_inset Formula 
+\[
+\mathbb{P}\left(X_{3}\geq\max\left\{ X_{1},X_{2}\right\} \right)\geq\mathbb{P}\left(X_{3}\geq2\right)=0.49.
+\]
+
+\end_inset
+
+In other words, 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ wins at least 49% of the time.
+ This is due to the fact that 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ has a high variance, so it can have realizations that are much higher than
+ are possible for 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+.
+ Thus, with more than 2 players, variance becomes an important consideration.
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ plots the probability of winning for the above example in which we set
+ 
+\begin_inset Formula $X_{3}\sim U\left[-a,a\right]$
+\end_inset
+
+, and let 
+\begin_inset Formula $a=1,\dots,100$
+\end_inset
+
+.
+ For small values of 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ clearly performs the best; however, this performance quickly drops off.
+ When 
+\begin_inset Formula $a\geq20$
+\end_inset
+
+, the probability of 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ winning is almost indistinguishable from the probability of 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ winning.
+ The importance of variance is clearly evident from this figure.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Affect of Variance in Uniform Distributions
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/uniform_dists.eps
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We quantify the importance of variance by asking the question: 
+\begin_inset Quotes eld
+\end_inset
+
+How much excess variance does one require to be indifferent between that
+ item and an item with an excess mean of 
+\begin_inset Formula $x$
+\end_inset
+
+, and how does this change with the number of players?
+\begin_inset Quotes erd
+\end_inset
+
+ To answer this question, we begin with a setup in which there are 
+\begin_inset Formula $N$
+\end_inset
+
+ players and 
+\begin_inset Formula $N$
+\end_inset
+
+ items (each player gets exactly 1 item).
+ All items are independent of each other and come from the same distribution
+ family (i.e., all distributions are uniform).
+ 
+\begin_inset Formula $N-2$
+\end_inset
+
+ of the items are identically distributed with mean 
+\begin_inset Formula $\mu$
+\end_inset
+
+ and variance 
+\begin_inset Formula $\sigma^{2}$
+\end_inset
+
+.
+ 1 item has mean 
+\begin_inset Formula $\mu+x$
+\end_inset
+
+ and variance 
+\begin_inset Formula $\sigma^{2}$
+\end_inset
+
+ (the 
+\begin_inset Quotes eld
+\end_inset
+
+high mean item
+\begin_inset Quotes erd
+\end_inset
+
+).
+ The remaining item has mean 
+\begin_inset Formula $\mu$
+\end_inset
+
+ and variance 
+\begin_inset Formula $\sigma^{2}+s^{2}$
+\end_inset
+
+ (the 
+\begin_inset Quotes eld
+\end_inset
+
+high variance item
+\begin_inset Quotes erd
+\end_inset
+
+).
+ We denote 
+\begin_inset Formula $x$
+\end_inset
+
+the 
+\begin_inset Quotes eld
+\end_inset
+
+excess mean,
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Formula $s^{2}$
+\end_inset
+
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+excess variance.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We estimate, via simulations, a value of 
+\begin_inset Formula $s$
+\end_inset
+
+ that makes agents indifferent between the high mean item and the high variance
+ item.
+ We can think of 
+\begin_inset Formula $s$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $N$
+\end_inset
+
+ that maps the excess mean and the number of players to the excess variance.
+ Using this approach, we can characterize the function 
+\begin_inset Formula $s\left(x,N\right)$
+\end_inset
+
+ for various distributions.
+ 
+\end_layout
+
+\begin_layout Standard
+We consider two specifications in this simulation.
+ The first features 
+\begin_inset Formula $N-2$
+\end_inset
+
+ items 
+\begin_inset Formula $\left\{ X_{i}\right\} _{i=1}^{N-2}\overset{iid}{\sim}U\left[-1,1\right]$
+\end_inset
+
+.
+ The high mean item is given by 
+\begin_inset Formula $X_{N-1}\sim U\left[-1+x,1+x\right]$
+\end_inset
+
+, and the high variance item is given by 
+\begin_inset Formula $X_{N}\sim U\left[-a,a\right]$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Note that we can also express the distribution of 
+\begin_inset Formula $X_{N}$
+\end_inset
+
+ in terms of excess variance, 
+\begin_inset Formula $s$
+\end_inset
+
+, as: 
+\begin_inset Formula $X_{N}\sim U\left[-\sqrt{3s^{2}+1},\sqrt{3s^{2}+1}\right]$
+\end_inset
+
+.
+ We opt for the simpler specification of 
+\begin_inset Formula $U\left[-a,a\right]$
+\end_inset
+
+, but the specification in terms of 
+\begin_inset Formula $s$
+\end_inset
+
+ highlights the relationship between a change in the bounds of the uniform
+ distribution and variance.
+\end_layout
+
+\end_inset
+
+ The second specification features 
+\begin_inset Formula $N-2$
+\end_inset
+
+ items 
+\begin_inset Formula $\left\{ X_{i}\right\} _{i=1}^{N-2}\overset{iid}{\sim}N\left(0,1\right)$
+\end_inset
+
+.
+ The high mean item is given by 
+\begin_inset Formula $X_{N-1}\sim N\left(x,1\right)$
+\end_inset
+
+, and the high variance item is given by 
+\begin_inset Formula $X_{N}\sim N\left(0,1+s\right)$
+\end_inset
+
+.
+ Without loss of generality, these two specifications completely characterize
+ the mean-variance tradeoff for all possible parametrizations of the uniform
+ and normal distributions in which 
+\begin_inset Formula $N-2$
+\end_inset
+
+ items are iid.
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ plots 
+\begin_inset Formula $s\left(x,N\right)$
+\end_inset
+
+ for 
+\begin_inset Formula $N=3,4,5,10$
+\end_inset
+
+ and 
+\begin_inset Formula $x\in\left[0,1\right]$
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Note that for the uniform specification, 
+\begin_inset Formula $x$
+\end_inset
+
+ can only take values in 
+\begin_inset Formula $\left[0,2\right)$
+\end_inset
+
+.
+ For an excess mean above 
+\begin_inset Formula $2$
+\end_inset
+
+, the 
+\begin_inset Formula $N-2$
+\end_inset
+
+ items that are distributed 
+\begin_inset Formula $U\left[-1,1\right]$
+\end_inset
+
+ will never have the maximum value, so this reduces to a two player, two
+ item setup.
+ As shown in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, no amount of variance can compensate for the difference in expected value,
+ so 
+\begin_inset Formula $s=\infty$
+\end_inset
+
+.
+ In principle, for the normal specification, 
+\begin_inset Formula $x$
+\end_inset
+
+ can take on any positive value, since normal distributions feature an unbounded
+ support, so no value of 
+\begin_inset Formula $x$
+\end_inset
+
+ reduces to a two player setup.
+ Nevertheless, the value of 
+\begin_inset Formula $s$
+\end_inset
+
+ approaches infinity as 
+\begin_inset Formula $x$
+\end_inset
+
+ increases.
+\end_layout
+
+\end_inset
+
+ using the two specifications considered above.
+ There seems to be an exponential relationship between excess mean and excess
+ variance, although the variance becomes flatter with more players.
+ For the three-player uniform specification, an excess mean of 0.2 requires
+ an excess variance of 0.7, but an excess mean of 1 requires an excess variance
+ of over 60.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+There is a decline in the excess variance from 
+\begin_inset Formula $x=0.95$
+\end_inset
+
+ to 
+\begin_inset Formula $x=1$
+\end_inset
+
+.
+ We do not expect the true relationship between mean and variance to exhibit
+ such non-monotonicities.
+ The decline shown in the figure is likely a result of our simulation results.
+ To solve for the value of 
+\begin_inset Formula $s$
+\end_inset
+
+, we rely on update rules that sequentially narrow the window of search
+ based on which distribution has a greater probability of winning.
+ As a result, an anomalous result can lead to the algorithm narrowing the
+ region when in fact it should not.
+ We hypothesize that this is the cause of the decline.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The mean-variance tradeoff becomes increasingly flat as the number of baseline
+ players increases.
+ This is due to the fact that excess mean is increasingly less valuable
+ as the number of players increase.
+ This can be seen most clearly in the uniform specification.
+ As the number of players increase, the maximum value of the baseline players'
+ items approaches the upper bound of the distribution (in this case, 1).
+ Thus, a marginal increase in the excess mean is likely to have less of
+ an effect on the win probability.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+For example, if the excess mean is 1, there is still only a 50% probability
+ of the high mean item having a greater value.
+\end_layout
+
+\end_inset
+
+ Excess variance, on the other hand, is much less dependent on the number
+ of baseline players.
+ By increasing the range (i.e., the support of the distribution), the high
+ variance item has a higher probability of achieving a value that is above
+ the support of any of the other items, which results in a victory with
+ certainty.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Mean-Variance Tradeoff for Symmetric Distributions
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/mv_symmetric.eps
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Excess mean becomes increasingly less valuable as the number of players
+ increases, while excess variance is relatively unaffected.
+ Thus, for a given excess mean 
+\begin_inset Formula $x$
+\end_inset
+
+, the excess variance required to compensate for this is a decreasing function
+ in the number of baseline players.
+ This result is being driven in the decreasing marginal value of excess
+ mean, rather than the marginal value of excess variance.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Mean-Variance Tradeoff for Varying 
+\begin_inset Formula $N$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/mv_players.eps
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can see the relationship between the mean-variance tradeoff and the number
+ of baseline players in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:3"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This plots the ratio of the excess mean, 
+\begin_inset Formula $x$
+\end_inset
+
+, to the excess variance, 
+\begin_inset Formula $s^{2}$
+\end_inset
+
+, as a function of the number of baseline players.
+ We examine the uniform and normal specifications with excess means of 
+\begin_inset Formula $x=0.5$
+\end_inset
+
+ and 
+\begin_inset Formula $x=1$
+\end_inset
+
+.
+ We see that this ratio is concave in the number of baseline players.
+ A lower excess mean results in a more concave function, but this is purely
+ a result of the exponential nature of the mean-variance relationship documented
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ There is a flattening relationship due to the fact that, as mentioned above,
+ there is diminishing marginal returns to increased excess mean.
+ As a result, for a given excess mean, as the number of players increases,
+ less excess variance is required to compensate for this.
+ This gives the increasing relationship shown.
+ The concavity of this function indicates the excess variance required decreases
+ at a decreasing rate.
+ 
+\end_layout
+
+\begin_layout Standard
+Lastly, we see that the normal distribution has a function that is consistently
+ greater than the uniform distribution.
+ Indeed, both normal specifications (with excess means 0.5 and 1) are both
+ strictly greater than both uniform specifications.
+ This indicates that for a given 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $N$
+\end_inset
+
+, the uniform distribution requires a higher excess variance to compensate
+ for this.
+ We believe this is due primarily to the bounded support of the uniform
+ distribution.
+ Increasing the variance of a uniform distribution reduces the mass on any
+ given event but increases the support.
+ Increasing the variance of a normal distribution does not expand the support,
+ but increases the probability of extreme values.
+ As a result, higher excess variance is more valuable in the normal specificatio
+n than in the uniform specification, and, as such, less excess variance
+ is required to compensate for a given excess mean.
+\end_layout
+
+\begin_layout Standard
+In theory, this mean-variance tradeoff could be examined for any distribution
+ that accepts at least two parameters, including both skewed and discrete
+ distributions.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Two parameters are required, as we need to be able to vary the mean and
+ variance independently of each other.
+ Therefore, we need at least two degrees of freedom.
+\end_layout
+
+\end_inset
+
+ However, there are issues with both skewed and discrete distributions.
+ For skewed distributions, altering the parametrizations not only affects
+ the mean and variance, but also the skew.
+ Skew, as we will see in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:4"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, is an important consideration.
+ As a result, such an analysis with skewed distributions is likely to confound
+ the tradeoff between mean and variance with variation in skew as well.
+ We tried this analysis for the gamma distribution, but, in our simulations,
+ we could only obtain equivalent values for very small values of 
+\begin_inset Formula $x$
+\end_inset
+
+ (less than 0.3; 6% of the baseline mean).
+ This was due to changes in the skew of the distribution.
+ As we changed our parametrizations to have the same mean but increasing
+ variance, the distribution became more skewed to the right, shifting most
+ of the mass to the left.
+ This made the resulting distribution less desirable.
+ For a fixed mean, the variance comoved with skew, and, because of this,
+ we were not able to solve for an indifference point in the mean-variance
+ tradeoff.
+\end_layout
+
+\begin_layout Standard
+For discrete distributions, the issue was one of computational imperfection.
+ Because almost all discrete distributions require at least one integer-valued
+ parameter (binomial, hypergeometric, etc.), we cannot have a continuous
+ mapping of these parametrizations to mean and variance.
+ As a result, there are often only one or few parametrizations that result
+ in a given mean.
+ Solving for an indifference between mean and variance (which requires iterating
+ over various parametrizations until convergence) is infeasible as a result.
 \end_layout
 
 \begin_layout Section
-Skew and Higher Moments
+Skew
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:4"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The analysis so far has focused entirely on symmetric distributions, which
+ have no skew by definition.
+ In this section, we briefly analyze the effect of skewness on the desirability
+ of items.
+ Note that, for the reasons discussed above, it is difficult to perform
+ a tradeoff analysis between mean, variance, and skewness due to the covariation
+ in them when there are fewer than 3 parameters (as is the case with almost
+ all common distributions).
+ As a result, the analysis in this section relies on general findings, rather
+ than a quantitative evaluation.
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:4"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ illustrates two distributions with different skewness, but the same mean
+ and variance.
+ The black line is the pdf of a gamma distribution with shape of 1 and scale
+ of 2.
+ The blue line is a pdf of a normal distribution with mean 2 and standard
+ deviation 
+\begin_inset Formula $\sqrt{2}$
+\end_inset
+
+.
+ The gamma distribution has a skew of 2, while the normal distribution has
+ no skew.
+ While these distributions come from different families and exhibit different
+ supports, this serves as a reasonable comparison to establish the importance
+ skewness.
+\end_layout
+
+\begin_layout Standard
+In our simulations, the item that is normally distributed has a value that
+ exceeds the item that is gamma distributed 56.17% of the time.
+ Positive skewness, therefore, does not seem to be a desirable property.
+ This is fairly intuitive; because positive skew shifts the mass to the
+ left of the distribution, the median is less than the mean (while, in a
+ distribution with no skewness, the mean and median are the same).
+ This means that the median of the gamma distribution is less than the median
+ of the normal distribution.
+ Indeed, the gamma distribution has a realization below its mean (2) 63.2%
+ of the time, compared to 50% of the time for the normal distribution.
+ Because of this, the normal distribution has a significant advantage over
+ the gamma distribution.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Normal and Gamma Distributions
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:4"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/skewness.eps
+	display false
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Cycles
+\end_layout
+
+\begin_layout Standard
+In choosing items sequentially, it is important to understand whether cycles
+ can exist in item comparisons.
+ Specifically, do there exist three items 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+, and 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ such that 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ more than 50% of the time, 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ more than 50% of the time, and 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ more than 50% of the time? Then, a player's preferences can be expressed
+ as 
+\begin_inset Formula $X_{1}\succ X_{2}\succ X_{3}\succ X_{1}$
+\end_inset
+
+.
+ This intransitivity of preferences (a so-called Condorcet cycle) is generally
+ an undesirable property, and is typically a ruled out by assumption in
+ decision theory research.
+\end_layout
+
+\begin_layout Standard
+In the adversarial knapsacks problem, cycles are possible.
+ This is due to the fact that, even with independent random variables, the
+ distribution of the difference of two random variables is given (in part)
+ by the product of their probability density functions.
+ As a result, Condorcet cycles can occur due to the interaction between
+ these distribution functions.
+ An example of a possible cycle is given by the following three items:
+\begin_inset Formula 
+\[
+\begin{array}{c}
+X_{1}=0\\
+X_{2}=\begin{cases}
+1 & w.p.\ 0.51\\
+-1.04 & w.p.\ 0.49
+\end{cases}\\
+X_{3}=\begin{cases}
+-1 & w.p.\ 0.52\\
+1.08 & w.p.\ 0.48
+\end{cases}
+\end{array}
+\]
+
+\end_inset
+
+All three items have zero mean.
+ 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ 51% of the time, 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ 52% of the time, and 
+\begin_inset Formula $X_{3}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ 
+\begin_inset Formula $\left(0.48+\left(0.49\times0.52\right)\right)=73.48\%$
+\end_inset
+
+ of the time.
+ Thus, we have 
+\begin_inset Formula $X_{2}\succ X_{1}\succ X_{3}\succ X_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Examples of Condorcet cycles that are analytically tractable tend to be
+ 
+\begin_inset Quotes eld
+\end_inset
+
+unnatural
+\begin_inset Quotes erd
+\end_inset
+
+ in the sense that they are ad-hoc specifications of distributions.
+ We are interested in whether there exists a 
+\begin_inset Quotes eld
+\end_inset
+
+natural
+\begin_inset Quotes erd
+\end_inset
+
+ cycle, i.e., a cycle that features items whose values follow common distributions
+ (uniform, normal, binomial, etc.).
+ To do so, we simulate pairwise comparisons between 22 parametrizations
+ of 13 distributions, and search for cycles among them.
+ We place the restriction that all distributions have the same expected
+ value to reduce the dimensionality of the problem.
+ We set this value to 10.
+ Table
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+List of Parametrizations
+\end_layout
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="23" columns="5">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Distributions
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parameters
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Empirical Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=0$
+\end_inset
+
+, 
+\begin_inset Formula $max=20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+34.09
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=5$
+\end_inset
+
+, 
+\begin_inset Formula $max=15$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8.28
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=-10$
+\end_inset
+
+, 
+\begin_inset Formula $max=30$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+132.90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Gamma
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $shape=10$
+\end_inset
+
+, 
+\begin_inset Formula $scale=1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9.79
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Gamma
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $shape=100$
+\end_inset
+
+, 
+\begin_inset Formula $scale=0.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hypergeometric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m=20$
+\end_inset
+
+, 
+\begin_inset Formula $n=40$
+\end_inset
+
+, 
+\begin_inset Formula $k=30$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.30
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hypergeometric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m=40$
+\end_inset
+
+, 
+\begin_inset Formula $n=20$
+\end_inset
+
+, 
+\begin_inset Formula $k=15$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.52
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Binomial
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n=1$
+\end_inset
+
+, 
+\begin_inset Formula $p=0.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8.95
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Binomial
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n=15$
+\end_inset
+
+, 
+\begin_inset Formula $p=\nicefrac{2}{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.36
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Poisson
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $lambda=10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Geometric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p=\nicefrac{1}{11}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+113.14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Negative Binomial
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $size=\nicefrac{10}{9}$
+\end_inset
+
+, 
+\begin_inset Formula $p=0.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+99.54
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Negative Binomial
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $size=90$
+\end_inset
+
+, 
+\begin_inset Formula $p=0.9$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11.15
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exponential
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $rate=0.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+103.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Log-normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $meanlog=1.61$
+\end_inset
+
+, 
+\begin_inset Formula $sdlog=1.18$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+297.01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Normal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $mean=10$
+\end_inset
+
+, 
+\begin_inset Formula $sd=4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16.07
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chi-squared
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $df=10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19.70
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Weibull
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $shape=10$
+\end_inset
+
+, 
+\begin_inset Formula $scale=10.51$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.40
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Weibull
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $shape=2$
+\end_inset
+
+, 
+\begin_inset Formula $scale=11.28$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+27.73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Discrete Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=0$
+\end_inset
+
+, 
+\begin_inset Formula $max=20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+36.59
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Discrete Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=5$
+\end_inset
+
+, 
+\begin_inset Formula $max=15$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.17
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Discrete Uniform
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $min=-10$
+\end_inset
+
+, 
+\begin_inset Formula $max=30$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+138.45
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Analytically solving for Condorcet cycles quickly Examples of Condorcet
+ cycles 
+\end_layout
+
+\begin_layout Standard
+However, finding a more 
+\begin_inset Quotes eld
+\end_inset
+
+natural
+\begin_inset Quotes erd
+\end_inset
+
+ cycle is 
 \end_layout
 
 \begin_layout Section

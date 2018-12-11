@@ -72,28 +72,24 @@ for(i in 1:nrow(results)) {
 }
 
 ### remove cases where margin is less than 2%
-margin <- results[!(results[, 3] >= 47 & results[, 3] <= 53), ]
+margin <- results[abs(results[, 3] - results[, 4]) >= 1.3, ]
 
 ### determine winner
 win <- margin[margin[, 3] > margin[, 4], 1:2]
 lose <- margin[margin[, 4] > margin[, 3], 2:1]
 winmat <- rbind(win, lose)
+winmat <- winmat[order(winmat[, 1], winmat[, 2]), ]
 
-### make grahp, get adjacency matrix
-g <- graph.data.frame(winmat)
+### make graph, get adjacency matrix
+g <- graph.data.frame(winmat, vertices = 1:22)
 adj <- as_adj(g, sparse = FALSE)
 
 ### test for cycles
 for(i in 1:nrow(adj)) {
 	for(j in 1:nrow(adj)) {
 		for(k in 1:nrow(adj)) {
-			for(m in 1:nrow(adj)) {
-				for(n in 1:nrow(adj)) {
-					if(adj[i, j] == 1 & adj[j, k] == 1 & adj[k, m] == 1 & adj[m, n] & adj[n, i]) {
-						print(paste0(i,j,k))
-					}
-
-				}
+			if(adj[i, j] == 1 & adj[j, k] == 1 & adj[k, i] == 1) {
+				print(paste(i, j, k, sep = ', '))
 			}
 		}
 	}
