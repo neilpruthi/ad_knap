@@ -30,3 +30,4 @@ dev.off()
 knapsack_compare(dists = list('Gamma', 'Normal'), params = list(c(shape = 1, scale = 2), c(mean = 2, sd = sqrt(2))))
 
 ##### SAVE DATA #####
+write.csv(probs, '~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/data/uniform_probs.csv')

@@ -85,7 +85,7 @@ for(i in 1:nrow(results)) {
 }
 
 ### remove cases where margin is less than 1%
-margin <- results[abs(results[, 3] - results[, 4]) >= 1, ]
+margin <- results[abs(results[, 3] - results[, 4]) >= 0.64, ]
 
 ### determine winner
 win <- margin[margin[, 3] > margin[, 4], 1:2]
