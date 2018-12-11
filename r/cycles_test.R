@@ -1,5 +1,6 @@
 ### packages
 library(igraph)
+library(moments)
 
 ### get functions
 source('~/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/r/single_comparison.R', echo = TRUE)
@@ -60,6 +61,18 @@ for(j in 1:length(dists_full)) {
 	print(mean(do.call(funcs[[1]], c(reps, as.list(params_full[[j]])))))
 }
 
+### print variances
+for(j in 1:length(dists_full)) {
+	funcs <- dist_funs[match(dists_full[[j]], dist_names)]
+	print(var(do.call(funcs[[1]], c(reps, as.list(params_full[[j]])))))
+}
+
+### print skewness
+for(j in 1:length(dists_full)) {
+	funcs <- dist_funs[match(dists_full[[j]], dist_names)]
+	print(skewness(do.call(funcs[[1]], c(reps, as.list(params_full[[j]])))))
+}
+
 ### initialize matrix of results
 results <- t(combn(1:length(dists_full), 2))
 results <- cbind(results, matrix(NA, nrow(results), 2))
@@ -67,12 +80,12 @@ colnames(results) <- c('Dist1', 'Dist2', 'Win1', 'Win2')
 
 ### make comparisons
 for(i in 1:nrow(results)) {
-	results[i, 3:4] <- knapsack_compare(dists = list(dists_full[[results[i, 1]]], dists_full[[results[i, 2]]]), params = list(params_full[[results[i, 1]]], params_full[[results[i, 2]]]), reps = 1, iters = 10000, summary = FALSE, store = TRUE)
+	results[i, 3:4] <- knapsack_compare(dists = list(dists_full[[results[i, 1]]], dists_full[[results[i, 2]]]), params = list(params_full[[results[i, 1]]], params_full[[results[i, 2]]]), reps = 1, iters = 100000, summary = FALSE, store = TRUE)
 	print(i)
 }
 
-### remove cases where margin is less than 2%
-margin <- results[abs(results[, 3] - results[, 4]) >= 1.3, ]
+### remove cases where margin is less than 1%
+margin <- results[abs(results[, 3] - results[, 4]) >= 1, ]
 
 ### determine winner
 win <- margin[margin[, 3] > margin[, 4], 1:2]
@@ -86,8 +99,8 @@ adj <- as_adj(g, sparse = FALSE)
 
 ### test for cycles
 for(i in 1:nrow(adj)) {
-	for(j in 1:nrow(adj)) {
-		for(k in 1:nrow(adj)) {
+	for(j in setdiff(1:nrow(adj), i)) {
+		for(k in setdiff(1:nrow(adj), c(i, j))) {
 			if(adj[i, j] == 1 & adj[j, k] == 1 & adj[k, i] == 1) {
 				print(paste(i, j, k, sep = ', '))
 			}

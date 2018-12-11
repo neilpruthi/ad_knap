@@ -1668,7 +1668,7 @@ natural
  We place the restriction that all distributions have the same expected
  value to reduce the dimensionality of the problem.
  We set this value to 10.
- Table
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1688,11 +1688,23 @@ status open
 
 \begin_layout Plain Layout
 List of Parametrizations
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:1"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="23" columns="5">
 <features booktabs="true" tabularvalignment="middle">
@@ -1703,6 +1715,15 @@ List of Parametrizations
 <column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1733,16 +1754,7 @@ Empirical Variance
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+Empirical Skewness
 \end_layout
 
 \end_inset
@@ -1750,6 +1762,15 @@ Empirical Variance
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1787,16 +1808,7 @@ Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.007
 \end_layout
 
 \end_inset
@@ -1804,6 +1816,15 @@ Uniform
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1841,16 +1862,7 @@ Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+–0.011
 \end_layout
 
 \end_inset
@@ -1858,6 +1870,15 @@ Uniform
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1895,16 +1916,7 @@ Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.017
 \end_layout
 
 \end_inset
@@ -1912,6 +1924,15 @@ Uniform
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1949,22 +1970,22 @@ Gamma
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.638
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2003,22 +2024,22 @@ Gamma
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.209
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2061,22 +2082,22 @@ Hypergeometric
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.025
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2119,22 +2140,22 @@ Hypergeometric
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.122
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2173,22 +2194,22 @@ Binomial
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.277
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2227,22 +2248,22 @@ Binomial
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.176
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2277,22 +2298,22 @@ Poisson
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.291
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2327,22 +2348,22 @@ Geometric
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+1.977
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2381,22 +2402,22 @@ Negative Binomial
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+1.920
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2435,22 +2456,22 @@ Negative Binomial
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.332
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2485,22 +2506,22 @@ Exponential
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+1.918
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2539,22 +2560,22 @@ Log-normal
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+7.043
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2593,22 +2614,22 @@ Normal
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.048
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2643,22 +2664,22 @@ Chi-squared
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.902
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+18
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2697,22 +2718,22 @@ Weibull
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.619
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2751,22 +2772,22 @@ Weibull
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.622
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2805,22 +2826,22 @@ Discrete Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+0.009
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" usebox="none">
 \begin_inset Text
 
@@ -2859,22 +2880,22 @@ Discrete Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.007
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
 \begin_inset Text
 
@@ -2913,16 +2934,7 @@ Discrete Uniform
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+-0.014
 \end_layout
 
 \end_inset
@@ -2945,20 +2957,133 @@ Discrete Uniform
 \end_layout
 
 \begin_layout Standard
-Analytically solving for Condorcet cycles quickly Examples of Condorcet
- cycles 
-\end_layout
+Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:1"
+plural "false"
+caps "false"
+noprefix "false"
 
-\begin_layout Standard
-However, finding a more 
+\end_inset
+
+ presents the parametrizations and distributions considered, as well as
+ their empirical variance and skewness.
+ There is a wide range of variance and skewnesses considered.
+ Variance ranges from 1 to nearly 300, while skewness ranges from -0.18 to
+ nearly 7.
+ These distributions provide a starting point for understanding whether
+ Condorcet cycles can arise 
 \begin_inset Quotes eld
 \end_inset
 
-natural
+naturally.
 \begin_inset Quotes erd
 \end_inset
 
- cycle is 
+
+\end_layout
+
+\begin_layout Standard
+As with the example devised above, the margins in the cycle are fairly small.
+ For example, 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ beats 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ 51% of the time.
+ Since our simulations estimate win probabilities with error,
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+We use 100,000 simulations.
+\end_layout
+
+\end_inset
+
+ the determination of what constitutes a 
+\begin_inset Quotes eld
+\end_inset
+
+significant
+\begin_inset Quotes erd
+\end_inset
+
+ win probability is essential.
+ To calibrate this choice of the margin required for a preference to be
+ considered significant, we rely on the theory in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Since we know for symmetric distributions, only expected values, all uniform,
+ normal, and discrete uniform specifications should perform identically.
+ Of the 21 pairs of these 7 distributions (3 uniform, 1 normal, 3 discrete
+ uniform), the maximum difference between in winning probabilities is 0.64%.
+ Thus, any margin that is greater than 0.64 should be significant at the
+ 5% level.
+ We thus set the critical margin to 0.64.
+\end_layout
+
+\begin_layout Standard
+Using 0.64 as the critical margin, we observe a cycle between distributions
+ 1, 18, and 6.
+ Distribution 1 beats 18 by a margin of 0.7%, 18 beats 6 by 2.04%, and 6 beats
+ 1 by 1%.
+ Similar to the example above, the margins are fairly small.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+These margins are close to the critical margin of 0.64, but our simulations
+ do not allow for greater power in this test.
+\end_layout
+
+\end_inset
+
+ Thus, out of the 231 pairs of distributions considered, there is a cycle
+ between the 
+\begin_inset Formula $U\left[0,20\right]$
+\end_inset
+
+, 
+\begin_inset Formula $Weibull\left[10,10.51\right]$
+\end_inset
+
+, and 
+\begin_inset Formula $HypGeom\left[20,40,30\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+These cycles are interesting phenomena.
+ Not only do they violate a key axiom in standard preferences, but also
+ form intersting game-theoretic applications.
+ The presence of cycles essentially affects whether the first mover has
+ an advantage.
+ If cycles did not exist, players in a sequential game would simply choose
+ the item that performed the best against other items.
+ Since there are no cycles, there is a globally-preferred option, and player
+ 2 would only be able to choose the next-best option.
+ However, if there were cycles in all items, the first-mover would be guaranteed
+ to lose on average.
+ For any item player 1 chose, player 2 would be able to choose another item
+ that performed relatively better.
+ In the case in which there are cycles with some items, the first mover
+ would never choose one of those items, for the same reason.
+ This essentially reduces the option set available to the first mover.
 \end_layout
 
 \begin_layout Section
