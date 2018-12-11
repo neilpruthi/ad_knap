@@ -71,7 +71,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_1.png", width = 16, height = 12)
+ggsave("../plots/final/utility_case_1.png", width = 12, height = 8)
 ```
 
 Homogeneous mean and variance.
@@ -102,7 +102,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_2.png", width = 16, height = 12)
+ggsave("../plots/final/utility_case_2.png", width = 12, height = 8)
 ```
 
 All different mean and variance.
@@ -114,7 +114,7 @@ n_items <- 6
 # Generate items
 items <- cbind(runif(n_draws, -1, 1), runif(n_draws, 0, 3),
                runif(n_draws, -2, 1), runif(n_draws, 0.80, 3.9),
-               runif(n_draws, 3, 5), runif(n_draws, -1, 5.5))
+               runif(n_draws, -2, 5), runif(n_draws, -1, 5.5))
 
 # Estimate utility
 items_u <- est_knap_u(items, n_players)
@@ -146,7 +146,7 @@ items %>%
       var == "V6" ~ mean(unlist(items_u)[grepl("^5", names(items_u))])
     ), avg_est_utility = round(avg_est_utility, digits = 4)
   ) %>% 
-  left_join(mini_pr, by = "var")
+  left_join(mini_pr, by = "var") %>% 
   group_by(var) %>% 
   mutate(lab = paste0("Average Estimated Utility: ", unique(avg_est_utility), 
                       "; Minimax Probability: ", round(unique(pr), digits = 4))) %>% 
@@ -156,7 +156,7 @@ items %>%
   scale_colour_viridis_d() +
   facet_wrap(. ~ lab, ncol = 1) +
   theme(legend.position = "none", axis.title = element_blank())
-ggsave("../plots/final/utility_case_3.png", width = 16, height = 12)
+ggsave("../plots/final/utility_case_3.png", width = 12, height = 8)
 ```
 
 
