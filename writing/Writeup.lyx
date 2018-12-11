@@ -1292,7 +1292,7 @@ name "fig:2"
 
 
 \begin_inset Graphics
-	filename C:/Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/mv_symmetric.eps
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/mv_symmetric.eps
 	display false
 	scale 50
 
@@ -1349,7 +1349,7 @@ name "fig:3"
 
 
 \begin_inset Graphics
-	filename C:/Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/mv_players.eps
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/mv_players.eps
 	display false
 	scale 50
 
@@ -1503,138 +1503,6 @@ For discrete distributions, the issue was one of computational imperfection.
 \end_layout
 
 \begin_layout Section
-Three cases
-\end_layout
-
-\begin_layout Subsection
-Case 1
-\end_layout
-
-\begin_layout Standard
-Suppose we have 
-\begin_inset Formula $n=2$
-\end_inset
-
-, 
-\begin_inset Formula $m=2$
-\end_inset
-
-, 
-\begin_inset Formula $b_{i}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $i\in N$
-\end_inset
-
-, and 
-\begin_inset Formula $p_{j}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $j\in M$
-\end_inset
-
-.
- Suppose the expected values and the variances of each item's value are
- equal.
- In this simple case, an agent's best strategy is to mix over each item
- with probabity 
-\begin_inset Formula $1/2$
-\end_inset
-
-.
- This is similar to 
-\emph on
-matching pennies
-\emph default
-, though here both agents want to 
-\emph on
-avoid
-\emph default
- matching.
-\end_layout
-
-\begin_layout Subsection
-Case 2
-\end_layout
-
-\begin_layout Standard
-As before, suppose that we have 
-\begin_inset Formula $n=2$
-\end_inset
-
-, 
-\begin_inset Formula $m=2$
-\end_inset
-
-, 
-\begin_inset Formula $b_{i}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $i\in N$
-\end_inset
-
-, 
-\begin_inset Formula $p_{j}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $j\in M$
-\end_inset
-
-, and that the expected values of each item's value are equal.
- But now let's allow for item value variances to be heterogeneous.
- Does an agent's best strategy change here? No.
- We know from 
-\emph on
-Two Player Variance Independence
-\emph default
- that variance shouldn't matter here.
-\end_layout
-
-\begin_layout Subsection
-Case 3
-\end_layout
-
-\begin_layout Standard
-Once again, let 
-\begin_inset Formula $b_{i}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $i\in N$
-\end_inset
-
-, 
-\begin_inset Formula $p_{j}=1$
-\end_inset
-
- for all 
-\begin_inset Formula $j\in M$
-\end_inset
-
-, and the expected values of each item's value be equal.
- But here suppose 
-\begin_inset Formula $n>2$
-\end_inset
-
- and 
-\begin_inset Formula $m\geq n$
-\end_inset
-
-, and as in Case 2, we allow for item value variances to be heterogeneous.
- In this case, we'd expect variance to matter.
- Here we hypothesize that an agent's best strategy is to mix over the 
-\begin_inset Formula $n$
-\end_inset
-
- highest-variance items, with the probability of choosing an item increasing
- in its variance.
-\end_layout
-
-\begin_layout Section
 Skew
 \begin_inset CommandInset label
 LatexCommand label
@@ -1727,7 +1595,7 @@ name "fig:4"
 
 
 \begin_inset Graphics
-	filename C:/Users/moradelsaify/Dropbox/Mory/Duke/Third Year/COMPSCI 590/ad_knap/plots/skewness.eps
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/skewness.png
 	display false
 	scale 50
 
@@ -3689,7 +3557,7 @@ This approach to utility estimation is intuitive, but requires many draws
 \end_layout
 
 \begin_layout Subsection
-Minimax
+Minimax in Three Cases
 \end_layout
 
 \begin_layout Standard
@@ -3700,65 +3568,209 @@ Once utility has been estimated for a given number of players and items,
  mixture distribution.
  Our implementation of minimax uses the linear programming approach presented
  in lecture.
+ We consider four cases, where players choose knapsacks simultaneously,
+ which we hope will provide some intuition about what minimax strategies
+ look like.
 \end_layout
 
 \begin_layout Subsubsection
-Symmetric Distributions and Equal Means
+Case 1
 \end_layout
 
 \begin_layout Standard
-Consistent with our two player variance independence result, when there
- are only two players, minimax advises one choose any given strategy (that
- is, minimax as we have implemented it will put all probability on whichever
- knapsack is first).
- However, when we consider 
+Suppose we have 
+\begin_inset Formula $n=2$
+\end_inset
+
+, 
+\begin_inset Formula $m=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{i}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i\in N$
+\end_inset
+
+, and 
+\begin_inset Formula $p_{j}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $j\in M$
+\end_inset
+
+.
+ Suppose the expected values and the variances of each item's value are
+ equal.
+ In this simple case, an agent's best strategy is to mix over each item
+ with probabity 
+\begin_inset Formula $1/2$
+\end_inset
+
+.
+ This is similar to 
+\emph on
+matching pennies
+\emph default
+, though here both agents want to 
+\emph on
+avoid
+\emph default
+ matching.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Estimated Utility - Case 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/utility_case_1.png
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Case 2
+\end_layout
+
+\begin_layout Standard
+As before, suppose that we have 
+\begin_inset Formula $n=2$
+\end_inset
+
+, 
+\begin_inset Formula $m=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{i}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i\in N$
+\end_inset
+
+, 
+\begin_inset Formula $p_{j}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $j\in M$
+\end_inset
+
+, and that the expected values of each item's value are equal.
+ But now let's allow for item value variances to be heterogeneous.
+ Does an agent's best strategy change here? No.
+ We know from 
+\emph on
+Two Player Variance Independence
+\emph default
+ that variance shouldn't matter here.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Estimated Utility - Case 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/utility_case_2.png
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Case 3
+\end_layout
+
+\begin_layout Standard
+Once again, let 
+\begin_inset Formula $b_{i}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i\in N$
+\end_inset
+
+, 
+\begin_inset Formula $p_{j}=1$
+\end_inset
+
+ for all 
+\begin_inset Formula $j\in M$
+\end_inset
+
+, and the expected values of each item's value be equal.
+ But here suppose 
 \begin_inset Formula $n>2$
 \end_inset
 
-, the minimax strategy places probability on a few items with high variance,
- though we have been unable to devise functions to estimate how many items
- minimax randomizes over..
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/uniform_dists.png
-	scale 50
-
+ and 
+\begin_inset Formula $m\geq n$
 \end_inset
 
-
-\end_layout
-
+, and as in Case 2, we allow for item value variances to be heterogeneous.
+ In this case, we'd expect variance to matter.
+ Here we hypothesize that an agent's best strategy is to mix over the 
+\begin_inset Formula $n$
 \end_inset
 
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Symmetric Distributions
-\end_layout
-
-\begin_layout Standard
-With symmetric distributions and heterogenous expectations, the minimax
- solution typically randomizes over a combination of items with high variance
- and high mean.
- However, we have again been able to determine any consistent rule.
- 
+ highest-variance items, with the probability of choosing an item increasing
+ in its variance.
 \end_layout
 
 \begin_layout Standard
@@ -3775,14 +3787,17 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-\begin_inset Graphics
-	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/uniform_dists_het_mean.png
-	scale 50
+Estimated Utility - Case 3
+\end_layout
 
 \end_inset
 
 
 \end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/utility_case_3.png
 
 \end_inset
 
@@ -3795,8 +3810,47 @@ status open
 \end_layout
 
 \begin_layout Standard
-While we have had difficulty characterizing minimax strategies, it does
- at least appear that the results are not quite uniform.
+The mixture distribution created by minimax is suprisingly not quite uniform
+ (even when given only uniform items), in fact given enough items (not pictured
+ below; actually, the exact simulation below is a little atypical in that
+ it puts some probability on most knapsacks) the distribution appears to
+ approach normal.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Minimax Mixture
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename C:/Users/ben/box/classes/compsci_590_computational_micro/project/ad_knap/plots/final/uniform_equal_3p_mixture.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -3880,6 +3934,19 @@ players, it would of course be ideal to further investigate the effect of
 
 \begin_layout Subsection
 Conclusion
+\end_layout
+
+\begin_layout Standard
+While we have only studied relatively aspects of the adversarial knapsack
+ problem, our results are intuitive and provide a solid foundation for future
+ work.
+ In particular, we have developed a framework for estimating the tradeoffs
+ between number of players, and desired mean, and variance of knapsacks.
+ We have investigated cases where Condorcet cycles may occur in sequential
+ games, and estimated the competitive performance and properties of various
+ distributions when matched against one another.
+ Lastly, we attempted to apply and understand the minimax optimal solutions
+ to simultaneous games.
 \end_layout
 
 \end_body
