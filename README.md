@@ -1,4 +1,4 @@
-# Adversarial Knapsack
+# Adversarial Knapsacks
 Project for CS-590.2, Computational Microeconomics, at Duke University, Fall 2018.
 
 ## Premise
@@ -12,5 +12,4 @@ The player who forms the knapsack with the highest value wins. Players only care
 * Mory Elsaify
 * [Ben Ewing](https://github.com/ben-e)
 * Usa Kerdnunvong
-* Kieran Manzella
 * [Neil Pruthi](https://github.com/neilpruthi)
